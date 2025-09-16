@@ -1,0 +1,7 @@
+-cp src
+-main src.Main
+-cpp export
+-D HAXE_OUTPUT_PART=HaxeNXCompiler
+--resource templates/MakefileNRO@MakefileNRO
+--resource templates/WrapperCPP@WrapperCodeCPP
+-D message.reporting=pretty

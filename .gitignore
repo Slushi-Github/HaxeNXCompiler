@@ -1,0 +1,22 @@
+# Folder
+/build
+/export
+/.haxelib
+
+# Executable file
+*.elf
+*.nro
+*.ncap
+
+# Archive
+*.zip
+
+# Programmer's Notepad state file
+*.pnps
+
+# Visual Studio Code
+.vscode/*
+!.vscode/tasks.json
+
+# Windows thumbnail cache
+Thumbs.db
