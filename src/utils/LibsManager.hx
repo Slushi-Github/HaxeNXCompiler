@@ -19,8 +19,6 @@ using StringTools;
  */
 typedef HxNXLibJSONStruct = {
 	libVersion:String,
-	// Custom UDP port for HxNXCompiler UDP server
-	customUDPPort:String,
 	// Haxe things
 	haxeLibs:Array<String>,
 	// Nintendo Switch things
@@ -63,6 +61,7 @@ class LibsManager {
 		var libs:Array<HxNXLibStruct> = [];
 		var importedLibs = new Map<String, Bool>();
 		if (mainJsonFile.extraLibs.length == 0) {
+			SlushiUtils.printMsg("No extra libs found in the main JSON file.", WARN);
 			return libs;
 		}
 
@@ -109,7 +108,6 @@ class LibsManager {
 				libs.push({
 					libJSONData: {
 						libVersion: jsonContent.libVersion,
-						customUDPPort: jsonContent.customUDPPort,
 						haxeLibs: jsonContent.haxeLibs,
 						switchLibs: jsonContent.switchLibs,
 						mainDefines: jsonContent.mainDefines,
@@ -161,6 +159,9 @@ class LibsManager {
 			libs.push("-lib " + MainCompiler.libs[i].hxLibName);
 
 			for (lib in MainCompiler.libs[i].libJSONData.haxeLibs) {
+				if (lib == null || lib == "") {
+					continue;
+				}
 				libs.push("-lib " + lib);
 			}
 		}
@@ -178,6 +179,9 @@ class LibsManager {
 			}
 
 			for (lib in MainCompiler.libs[i].libJSONData.switchLibs) {
+				if (lib == null || lib == "") {
+					continue;
+				}
 				libs.push("-l" + lib);
 			}
 		}

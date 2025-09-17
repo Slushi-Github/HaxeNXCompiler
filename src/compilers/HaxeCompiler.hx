@@ -75,16 +75,17 @@ class HaxeCompiler {
 	-D message.reporting=${reportStyle}
 	# Default and required libraries #########
 	-lib hxcpp
-	# -lib hx_libnx (It doesnt exist yet!)
+	-lib hx_libnx
 	# HXCPP parameters #########
 	-cpp ${jsonFile.haxeConfig.cppOutDir}
 	-D HAXE_OUTPUT_PART=HAXE_NX_PROGRAM
 	-D nx
+	-D HX_NX
 	-D static_link
 	############################
 	# Extra Haxe Libraries
 	${finalHxLibs()}
-	# Extra defines
+	# Extra Haxe defines
 	${finalHxDefines()}
 	# Extra options
 	${finalOtherOptions()}
