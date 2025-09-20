@@ -85,7 +85,7 @@ After that, you will get your executable ``HaxeNXCompiler`` in the "export" fold
 
 #### You can also use the following command search a line of code in the ``.elf`` file from a line address of some log using devkitA64's ``aarch64-none-elf-addr2line`` program:
 
-``{haxeNXCompilerProgram} --searchProblem [lineAddress]``
+``{haxeNXCompilerProgram} --searchProblem [lineAddress]`` or ``{haxeNXCompilerProgram} --sp [lineAddress]``
 
 -----
 

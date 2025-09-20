@@ -71,6 +71,8 @@ class NXLinker {
 				SlushiUtils.printMsg("Overwriting existing hxcpp wrapper C++ file...", WARN);
 			}
 
+			wrapperCPPContent = wrapperCPPContent.replace("[PROGRAM_VERSION]", Main.version);
+
 			File.saveContent(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/wrapper_src/wrapper.cpp", wrapperCPPContent);
 
 			makefileContent = makefileContent.replace("[CPP_WRAPPER_DIR]", jsonFile.haxeConfig.cppOutDir + "/wrapper_src");
@@ -154,10 +156,6 @@ class NXLinker {
 
 		for (define in Defines.parseMakeFileDefines().main) {
 			defines.c += define + " ";
-		}
-
-		if (jsonFile.haxeConfig.debugMode == true) {
-			defines.c += "-D debug ";
 		}
 
 		defines.c += JsonFile.parseJSONVars();
