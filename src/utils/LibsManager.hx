@@ -76,7 +76,10 @@ class LibsManager {
 		}
 
 		function processLib(libName:String, libVersion:String = null) {
-			if (importedLibs.exists(libName)) return;
+			// if (importedLibs.exists(libName)) {
+			// 	SlushiUtils.printMsg("Lib [" + libName + "] already imported.", WARN);
+			// 	return;
+			// }
 			importedLibs.set(libName, true);
 
 			var libFolder = mainPath + "/" + libName;
@@ -152,9 +155,9 @@ class LibsManager {
 		var libs:Array<String> = [];
 
 		for (i in 0...MainCompiler.libs.length) {
-			if (MainCompiler.libs[i].libJSONData.haxeLibs.length == 0) {
-				continue;
-			}
+			// if (MainCompiler.libs[i].libJSONData.haxeLibs.length == 0) {
+			// 	continue;
+			// }
 
 			libs.push("-lib " + MainCompiler.libs[i].hxLibName);
 

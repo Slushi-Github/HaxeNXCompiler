@@ -82,12 +82,17 @@ class NXLinker {
 			makefileContent = makefileContent.replace("[LIBS]", parseMakeLibs());
 			makefileContent = makefileContent.replace("[C_DEFINES]", parseMakeDefines().c);
 			makefileContent = makefileContent.replace("[CPP_DEFINES]", parseMakeDefines().cpp);
-			makefileContent = makefileContent.replace("[HAXE_MAIN_LIB]", jsonFile.haxeConfig.cppOutDir + "/libHAXE_NX_PROGRAM.a");
+			var haxeMainLib = jsonFile.haxeConfig.cppOutDir + "/libHAXE_NX_PROGRAM.a";
+			if (HaxeCompiler.forceDebugMode || jsonFile.haxeConfig.debugMode) {
+				haxeMainLib = jsonFile.haxeConfig.cppOutDir + "/libHAXE_NX_PROGRAM-debug.a";
+			}
+			makefileContent = makefileContent.replace("[HAXE_MAIN_LIB]", haxeMainLib);
 
 			if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles")) {
 				FileSystem.createDirectory(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles");
 			}
 			makefileContent = makefileContent.replace("[OUT_DIR]", jsonFile.haxeConfig.cppOutDir + "/switchFiles");
+			makefileContent = makefileContent.replace("[ROMFS_DIR]", jsonFile.haxeConfig.cppOutDir + "/romfs");
 
 			// Save Makefile
 			// delete temporal makefile if already exists

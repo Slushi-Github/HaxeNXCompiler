@@ -7,6 +7,8 @@ Using this utility (Inspired by [HxCompileU](https://github.com/Slushi-Github/hx
 
 This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-team) to use Haxe on the Nintendo Switch. I used part of the [original project](https://github.com/retronx-team/switch-haxe) for this, so credit goes to them for achieving this in the first place!
 
+**This project is being tested with Haxe 4.3.6 and a Nintendo Switch V2.**
+
 Officially there are supported libraries to be used in conjunction with HaxeNXCompiler:
 
 - [hx_libnx](https://github.com/Slushi-Github/hx_libnx): Haxe/hxcpp @:native bindings for libnx, the Nintendo Switch's homebrew library.
@@ -30,6 +32,7 @@ Well, I've been having fun using the Nintendo Wii U with Haxe through my [HxComp
 -----
 
 # Usage
+
 The basic usage of HaxeNXCompiler is as follows:
 
 You need:
@@ -50,10 +53,10 @@ First, you need compilate this project, or you can use the precompiled version t
 git clone https://github.com/Slushi-Github/HaxeNXCompiler.git
 
 # Install hxcpp
-haxelib git hxcpp https://github.com/Slushi-Github/hxcpp-nx
+haxelib git hxcpp https://github.com/Slushi-Github/hxcpp-nx.git
 
 # Install hx_libnx
-haxelib git hx_libnx https://github.com/Slushi-Github/hx_libnx
+haxelib git hx_libnx https://github.com/Slushi-Github/hx_libnx.git
 
 # Compile the project
 cd HaxeNXCompiler
@@ -66,7 +69,7 @@ After that, you will get your executable ``HaxeNXCompiler`` in the "export" fold
 
 ## How to use
 
-#### First, initialize your project, that is, create the configuration JSON file that HxCompileU will use, you can create it using this command:
+#### First, initialize your project, that is, create the configuration JSON file that HaxeNXCompiler will use, you can create it using this command:
 ``{haxeNXCompilerProgram} --prepare`` or ``{haxeNXCompilerProgram} --p``
 
  - Or you can import an existing JSON file from a Haxe library with the following command:
@@ -93,11 +96,20 @@ After that, you will get your executable ``HaxeNXCompiler`` in the "export" fold
 
 ``{haxeNXCompilerProgram} --send`` or ``{haxeNXCompilerProgram} --s``
 
+ - If you want start a server, you can use the following command:
+
+    ``{haxeNXCompilerProgram} --send --server`` or ``{haxeNXCompilerProgram} --s --s``
+
 -----
 
 and that's it! if your compilation was successful on both Haxe and Nintendo Switch side, your ``.nro`` and ``.elf`` files will be in ``yourOutputFolder/switchFiles``.
 
------
+
+## About RomFS
+
+The ``romfs`` folder is a folder that contains files that will be added to the ``.nro`` file.
+
+To use this, create a folder in the main folder directory (Who is ``yourOutputFolder``), or a library compatible with HaxeNXCompiler, called "assets" Inside that folder, there should be another folder called "ROMFS" From there, you can copy everything you want, and a folder named "romfs" will be copied to ``yourOutputFolder``. The MakeFile will then copy those files to the ``.nro`` file, which can be accessed by searching the path "romfs:/" (you must first mount that path with [hx_libnx](https://github.com/Slushi-Github/hx_libnx)!).
 
 ## License
 This project is released under the [MIT license](https://github.com/Slushi-Github/HaxeNXCompiler/blob/main/LICENSE.md).

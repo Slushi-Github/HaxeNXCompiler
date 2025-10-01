@@ -6,6 +6,7 @@
 
 package src.compilers;
 
+import utils.AssetsManager;
 import src.SlushiUtils;
 import src.compilers.NXLinker;
 import src.compilers.HaxeCompiler;
@@ -109,8 +110,11 @@ class MainCompiler {
 			SlushiUtils.cleanBuild();
 		}
 
-		// First compile Haxe part and then compile Nintendo Switch part
+		// First compile Haxe part, copy the assets files and then compile Nintendo Switch part
 		HaxeCompiler.init();
+		SlushiUtils.printMsg("----------------------", NONE, "\n");
+		AssetsManager.searchAndGetAssets();
+		SlushiUtils.printMsg("----------------------\n", NONE);
 		NXLinker.init();
 	}
 }

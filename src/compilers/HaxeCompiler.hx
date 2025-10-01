@@ -86,6 +86,8 @@ class HaxeCompiler {
 	# Extra Haxe Libraries
 	${finalHxLibs()}
 	# Extra Haxe defines
+	-D HAXENXCOMPILER_VERSION="${Main.version}"
+	-D HAXENXCOMPILER_JSON_SWITCH_PROJECTNAME="${jsonFile.switchConfig.projectName}"
 	${finalHxDefines()}
 	# Extra options
 	${finalOtherOptions()}
@@ -167,7 +169,7 @@ class HaxeCompiler {
 		var defines = "";
 
 		for (define in Defines.parseHXDefines()) {
-			defines += define + "\n";
+			defines += define + "\n\t";
 		}
 
 		return defines;
@@ -177,7 +179,7 @@ class HaxeCompiler {
 		var options = "";
 
 		for (option in Defines.parseOtherOptions()) {
-			options += option + "\n";
+			options += option + "\n\t";
 		}
 
 		return options;

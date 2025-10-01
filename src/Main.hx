@@ -22,7 +22,7 @@ import src.utils.DevKitProUtils;
  */
 class Main {
 	public static var haxenxcompilerString = "\x1b[38;5;214mHaxe\033[0m\x1b[38;5;81mN\x1b[38;5;1mX\033[0mCompiler (Based on \x1b[38;5;214mHx\033[0mCompile\x1b[38;5;74mU\033[0m)";
-	public static final version:String = "1.0.4";
+	public static final version:String = "1.1.0";
 	static var stdin = Sys.stdin();
 	static var stdout = Sys.stdout();
 	static var args = Sys.args();
@@ -33,7 +33,7 @@ class Main {
 			return;
 		}
 
-		if (args[0] != "--version" || args[0] != "--help" || args.length < 1) {
+		if (args[0] != "--version" || args[0] != "--v" || args[0] != "--help" || args[0] != "--h" || args.length < 1) {
 			SlushiUtils.printMsg('$haxenxcompilerString v$version -- Created by \033[96mSlushi\033[0m', NONE);
 		}
 
@@ -52,12 +52,12 @@ class Main {
 				case "--searchProblem" | "--sp":
 					DevKitProUtils.searchProblem(args[1]);
 				case "--send" | "--s":
-					DevKitProUtils.send();
+					DevKitProUtils.send(args[1]);
 				case "--version" | "--v":
 					// No need to print the version here, it's already printed at the start of the program
 					return;
 				case "--help" | "--h":
-					SlushiUtils.printMsg("Usage: HaxeNXCompiler [command]\nCommands:\n\t--prepare, --p: Creates a new haxeNXConfig.json in the current directory.\n\t--import, --i \033[3mHAXE_LIB\033[0m: Imports a JSON file from a Haxe lib to the current directory \n\t--compile, --c: Compiles the project. \n\t\tAdd \"--debug\" to enable Haxe debug mode \n\t--searchProblem, --sp \033[3mLINE_ADDRESS\033[0m: search for a line of code in the [.elf] file from a line address of some log using devkitA64's aarch64-none-elf-addr2line program \n\t--send, --s: Sends the .nro file to the Nintendo Switch\n\t--version, --v: Shows the version of the compiler\n\t--help, --h: Shows this message",
+					SlushiUtils.printMsg("Usage: HaxeNXCompiler [command]\nCommands:\n\t--prepare, --p: Creates a new haxeNXConfig.json in the current directory.\n\t--import, --i \033[3mHAXE_LIB\033[0m: Imports a JSON file from a Haxe lib to the current directory \n\t--compile, --c: Compiles the project. \n\t\tAdd \"--debug\" to enable Haxe debug mode \n\t--searchProblem, --sp \033[3mLINE_ADDRESS\033[0m: search for a line of code in the [.elf] file from a line address of some log using devkitA64's aarch64-none-elf-addr2line program \n\t--send, --s: Sends the .nro file to the Nintendo Switch using DevKitPro's nxlink program \n\t\tAdd \"--server\" or \"--s\" to start the a cosnole server via nxlink\n\t--version, --v: Shows the version of the compiler\n\t--help, --h: Shows this message",
 						NONE);
 				default:
 					SlushiUtils.printMsg("Invalid argument: [" + args.join(" ") + "], use \033[3m--help\033[0m argument for more information", NONE);

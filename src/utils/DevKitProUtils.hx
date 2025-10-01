@@ -50,7 +50,7 @@ class DevKitProUtils {
 	/**
 	 * Sends the compiled .nro file to the Switch console.
 	 */
-	public static function send():Void {
+	public static function send(arg1:String):Void {
 		var filePath:String = "";
 
 		filePath = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles/" + jsonFile.switchConfig.projectName
@@ -73,6 +73,12 @@ class DevKitProUtils {
 			return;
 		}
 
-		Sys.command(nxlinkProgram, ["-a", jsonFile.switchConfig.consoleIP, filePath]);
+		var arguments = ["-a", jsonFile.switchConfig.consoleIP, filePath];
+
+		if (arg1 == "--server" || arg1 == "--s") {
+			arguments.push("-s");
+		}
+
+		Sys.command(nxlinkProgram, arguments);
 	}
 }
