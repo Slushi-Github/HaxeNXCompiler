@@ -6,6 +6,9 @@ import haxe.io.Path;
 import haxe.Json;
 import haxe.crypto.Md5;
 
+import src.JsonFile;
+import src.SlushiUtils;
+
 using StringTools;
 
 /**
