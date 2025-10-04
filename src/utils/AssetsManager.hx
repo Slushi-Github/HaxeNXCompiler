@@ -1,3 +1,9 @@
+// Copyright (c) 2025 Andrés E. G.
+//
+// This software is licensed under the MIT License.
+// See the LICENSE file for more details.
+
+
 package utils;
 
 import sys.FileSystem;
@@ -22,6 +28,14 @@ class AssetsManager {
     static var cacheFile:String;
     private static final jsonCacheFileName:String = "HxNX_AssetsCache.json";
 
+    /*
+     * List of files found in the assets
+     */
+    static var foundFiles:Array<String> = [];
+
+    /**
+     * Search for assets and copy them to the output folder
+     */
     public static function searchAndGetAssets():Void {
         var outputDir = jsonFile.haxeConfig.cppOutDir;
         var basePath = SlushiUtils.getPathFromCurrentTerminal();
@@ -70,7 +84,7 @@ class AssetsManager {
 
             var versionFolder =
                 if (libVersion != null) libVersion.replace(".", ",")
-                else if (FileSystem.exists(Path.join([libFolder, ".current"])))
+                else if (FileSystem.exists(Path.join([libFolder, ".current"])) )
                     File.getContent(Path.join([libFolder, ".current"])).trim().replace(".", ",")
                 else "";
 
@@ -92,6 +106,9 @@ class AssetsManager {
             }
         }
 
+        // Clean removed assets
+        cleanRemovedAssets(outputPath);
+
         // Save cache
         saveCache();
     }
@@ -107,10 +124,12 @@ class AssetsManager {
                 for (sub in FileSystem.readDirectory(srcFile)) {
                     var from = Path.join([srcFile, sub]);
                     var to = Path.join([dstFile, sub]);
-                    copyIfChanged(from, to, libName + "/ROMFS/" + f + "/" + sub);
+                    var key = libName + "/ROMFS/" + f + "/" + sub;
+                    copyIfChanged(from, to, key);
                 }
             } else {
-                copyIfChanged(srcFile, dstFile, libName + "/ROMFS/" + f);
+                var key = libName + "/ROMFS/" + f;
+                copyIfChanged(srcFile, dstFile, key);
             }
         }
     }
@@ -118,6 +137,8 @@ class AssetsManager {
     static function copyIfChanged(from:String, to:String, key:String):Void {
         var newHash = Md5.make(File.getBytes(from)).toHex();
         var oldHash = cache.exists(key) ? cache.get(key) : null;
+
+        foundFiles.push(key);
 
         if (oldHash != null && oldHash == newHash && FileSystem.exists(to)) {
             SlushiUtils.printMsg("Skipped (unchanged): " + to, INFO);
@@ -127,6 +148,30 @@ class AssetsManager {
         File.copy(from, to);
         cache.set(key, newHash);
         SlushiUtils.printMsg("Copied: " + from + " -> " + to, SUCCESS);
+    }
+
+    // 🔥 Elimina archivos que estaban en cache pero ya no existen en origen
+    static function cleanRemovedAssets(outputPath:String):Void {
+        var toRemove:Array<String> = [];
+
+        for (k in cache.keys()) {
+            if (!foundFiles.contains(k)) {
+                // Archivo estaba en cache pero no se detectó en esta ejecución
+                var relative = k.split("/ROMFS/").length > 1 ? k.split("/ROMFS/")[1] : k;
+                var dstFile = Path.join([outputPath, "romfs", relative]);
+                if (FileSystem.exists(dstFile)) {
+                    try {
+                        FileSystem.deleteFile(dstFile);
+                        SlushiUtils.printMsg("Removed missing asset: " + dstFile, WARN);
+                    } catch (e:Dynamic) {
+                        SlushiUtils.printMsg("Failed to remove old asset: " + dstFile + " (" + e + ")", ERROR);
+                    }
+                }
+                toRemove.push(k);
+            }
+        }
+
+        for (r in toRemove) cache.remove(r);
     }
 
     static function saveCache():Void {
