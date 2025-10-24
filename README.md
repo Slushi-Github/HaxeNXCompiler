@@ -7,7 +7,7 @@ Using this utility (Inspired by [HxCompileU](https://github.com/Slushi-Github/hx
 
 This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-team) to use Haxe on the Nintendo Switch. I used part of the [original project](https://github.com/retronx-team/switch-haxe) for this, so credit goes to them for achieving this in the first place!
 
-**This project is being tested with Haxe 4.3.6 and a Nintendo Switch V2.**
+**This project is being tested with Haxe 4.3.7 and a Nintendo Switch V2 with firmware 20.4.0 (AMS 1.9.4).**
 
 Officially there are supported libraries to be used in conjunction with HaxeNXCompiler:
 
@@ -102,14 +102,42 @@ After that, you will get your executable ``HaxeNXCompiler`` in the "export" fold
 
 -----
 
-and that's it! if your compilation was successful on both Haxe and Nintendo Switch side, your ``.nro`` and ``.elf`` files will be in ``yourOutputFolder/switchFiles``.
+and that's it! if your compilation was successful on both Haxe and Nintendo Switch side, your ``.nro``, ``.ncap`` and ``.elf`` files will be in ``yourOutputFolder/switchFiles``.
 
 
-## About RomFS
+## libraries JSON file
+
+When you create a library that will be compatible with HaxeNXCompiler and you need it to import important things such as more Haxe libraries, or libraries and parameters for the MakeFile, add a file called ``HxNX_Meta.json`` to your library, which should have the following structure: 
+
+(This is just an example; comments do not work in JSON (at least not in ``haxe.Json``))
+
+```json
+{
+    "libVersion": "0.0.0", // Library version
+    "haxeLibs": [], // more Haxe libraries
+    "switchLibs": [], // C/C++ Libraries for the Nintendo Switch (from DevKitPro)
+    "mainDefines": [], // Defines for Haxe and C/C++
+    "hxDefines": [], // Haxe defines
+    "cDefines": [], // C defines
+    "cppDefines": [] // C++ defines
+}
+```
+
+If HaxeNXCompiler cannot find a library with that file, it will import it only for Haxe.
+
+## About aseets
+
+### About RomFS
 
 The ``romfs`` folder is a folder that contains files that will be added to the ``.nro`` file.
 
-To use this, create a folder in the main folder directory (Who is ``yourOutputFolder``), or a library compatible with HaxeNXCompiler, called "assets" Inside that folder, there should be another folder called "ROMFS" From there, you can copy everything you want, and a folder named "romfs" will be copied to ``yourOutputFolder``. The MakeFile will then copy those files to the ``.nro`` file, which can be accessed by searching the path "romfs:/" (you must first mount that path with [hx_libnx](https://github.com/Slushi-Github/hx_libnx)!).
+To use this, create a folder in the main folder directory (Who is ``yourOutputFolder``), or a library compatible with HaxeNXCompiler, called "assets" Inside that folder, there should be another folder called "ROMFS" From there, you can copy everything you want, and a folder named "romfs" into a other folder called "SWITCH_ASSETS" will be copied to ``yourOutputFolder``. The MakeFile will then copy those files to the ``.nro`` file, which can be accessed by searching the path "romfs:/" (you must first mount that path with [hx_libnx](https://github.com/Slushi-Github/hx_libnx)!).
+
+### About the metadata for the ``.nro`` file
+
+Inside the JSON file ``haxeNXConfig.json`` you will find the parameters ``appTitle``, ``appVersion``, and ``appAuthor``. You can fill in these fields with whatever information you want to be displayed in the Homebrew menu. 
+
+In addition, if there is a file named "icon.jpg" or one named "YOUR_PROJECT_NAME.jpg" in your project's assets folder or in a folder, they will be copied to the "SWITCH_ASSETS" folder so that the ``.nro`` file can use them. If that ".jpg" file is not found in any library or in the main project, HaxeNXCompiler will automatically provide one in the "SWITCH_ASSETS" folder.
 
 ## License
 This project is released under the [MIT license](https://github.com/Slushi-Github/HaxeNXCompiler/blob/main/LICENSE.md).

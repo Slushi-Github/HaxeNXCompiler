@@ -21,16 +21,22 @@ class Defines {
 	 * Parses the Haxe defines from the JSON file.
 	 * @return Array<String>
 	 */
-	public static function parseHXDefines():Array<String> {
-		var defines:Array<String> = [];
+	public static function parseHXDefines():{main:Array<String>, hxDef:Array<String>} {
+		var defines = {main: [], hxDef: []};
 
 		for (define in jsonFile.projectDefines) {
-			defines.push("-D " + define);
+			defines.main.push("-D " + define);
 		}
 
 		for (lib in MainCompiler.libs) {
 			for (define in lib.libJSONData.mainDefines) {
-				defines.push("-D " + define);
+				defines.main.push("-D " + define);
+			}
+		}
+
+		for (lib in MainCompiler.libs) {
+			for (define in lib.libJSONData.hxDefines) {
+				defines.hxDef.push(define);
 			}
 		}
 

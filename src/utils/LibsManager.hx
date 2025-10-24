@@ -25,6 +25,8 @@ typedef HxNXLibJSONStruct = {
 	switchLibs:Array<String>,
 	// Other things
 	mainDefines:Array<String>,
+	// Haxe things
+	hxDefines:Array<String>,
 	// MakeFile things
 	cDefines:Array<String>,
 	cppDefines:Array<String>
@@ -101,7 +103,19 @@ class LibsManager {
 				metaPath = libFolder + "/" + versionFolder + "/" + jsonName;
 			}
 			if (!FileSystem.exists(metaPath)) {
-				SlushiUtils.printMsg("Meta file [" + metaPath + "] not found for lib [" + libName + "]", WARN);
+				SlushiUtils.printMsg("Meta file [" + metaPath + "] not found for lib [" + libName + "], importing only for Haxe.", WARN);
+				libs.push({
+					libJSONData: {
+						libVersion: "unknown",
+						haxeLibs: [],
+						switchLibs: [],
+						hxDefines: [],
+						mainDefines: [],
+						cDefines: [],
+						cppDefines: []
+					},
+					hxLibName: libName,
+				});
 				return;
 			}
 			try {
@@ -113,6 +127,7 @@ class LibsManager {
 						libVersion: jsonContent.libVersion,
 						haxeLibs: jsonContent.haxeLibs,
 						switchLibs: jsonContent.switchLibs,
+						hxDefines: jsonContent.hxDefines,
 						mainDefines: jsonContent.mainDefines,
 						cDefines: jsonContent.cDefines,
 						cppDefines: jsonContent.cppDefines
@@ -155,10 +170,6 @@ class LibsManager {
 		var libs:Array<String> = [];
 
 		for (i in 0...MainCompiler.libs.length) {
-			// if (MainCompiler.libs[i].libJSONData.haxeLibs.length == 0) {
-			// 	continue;
-			// }
-
 			libs.push("-lib " + MainCompiler.libs[i].hxLibName);
 
 			for (lib in MainCompiler.libs[i].libJSONData.haxeLibs) {
@@ -176,7 +187,6 @@ class LibsManager {
 		var libs:Array<String> = [];
 
 		for (i in 0...MainCompiler.libs.length) {
-
 			if (MainCompiler.libs[i].libJSONData.switchLibs.length <= 0) {
 				continue;
 			}

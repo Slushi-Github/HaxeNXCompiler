@@ -88,9 +88,10 @@ class HaxeCompiler {
 	# Extra Haxe defines
 	-D HAXENXCOMPILER_VERSION="${Main.version}"
 	-D HAXENXCOMPILER_JSON_SWITCH_PROJECTNAME="${jsonFile.switchConfig.projectName}"
-	${finalHxDefines()}
+	${finalHxDefines().main}
 	# Extra options
 	${finalOtherOptions()}
+	${finalHxDefines().hxDef}
 ';
 			// delete temporal HXML if already exists
 			if (FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + '/${hxmlFileName}.hxml')) {
@@ -165,11 +166,15 @@ class HaxeCompiler {
 		return libs;
 	}
 
-	static function finalHxDefines():String {
-		var defines = "";
+	static function finalHxDefines():{main:String, hxDef:String} {
+		var defines = {main: "", hxDef: ""};
 
-		for (define in Defines.parseHXDefines()) {
-			defines += define + "\n\t";
+		for (define in Defines.parseHXDefines().main) {
+			defines.main += define + "\n\t";
+		}
+
+		for (define in Defines.parseHXDefines().hxDef) {
+			defines.hxDef += define + "\n\t";
 		}
 
 		return defines;

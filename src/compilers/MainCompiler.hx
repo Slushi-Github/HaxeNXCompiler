@@ -81,13 +81,13 @@ class MainCompiler {
 			}
 		} else {
 			if (currentVersion < parsedJsonVersion) {
-				SlushiUtils.printMsg("The current version of HaxeNXCompiler is older than the one in the JSON file, consider updating it.", WARN);
+				SlushiUtils.printMsg("The current version of HaxeNXCompiler (" + Main.version + ") is older than the one in the JSON file (" + versionStr + "), consider updating it.", WARN);
 				if (forced) {
 					versionMismatch = true;
 					shouldStop = true; // Stop if forced
 				}
 			} else if (currentVersion > parsedJsonVersion) {
-				SlushiUtils.printMsg("The current version of HaxeNXCompiler is newer than the one in the JSON file, consider checking the JSON file.", WARN);
+				SlushiUtils.printMsg("The current version of HaxeNXCompiler (" + Main.version + ") is newer than the one in the JSON file (" + versionStr + "), consider checking the JSON file.", WARN);
 				if (forced) {
 					versionMismatch = true;
 					shouldStop = true; // Stop if forced
@@ -112,9 +112,11 @@ class MainCompiler {
 
 		// First compile Haxe part, copy the assets files and then compile Nintendo Switch part
 		HaxeCompiler.init();
-		SlushiUtils.printMsg("----------------------", NONE);
-		AssetsManager.searchAndGetAssets();
-		SlushiUtils.printMsg("----------------------\n", NONE);
+		if (HaxeCompiler.getExitCode() == 0) {
+			SlushiUtils.printMsg("----------------------", NONE);
+			AssetsManager.searchAndGetAssets();
+			SlushiUtils.printMsg("----------------------\n", NONE);
+		}
 		NXLinker.init();
 	}
 }

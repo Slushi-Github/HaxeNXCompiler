@@ -64,7 +64,6 @@ class NXLinker {
 			if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/wrapper_src")) {
 				FileSystem.createDirectory(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/wrapper_src");
 			}
-
 			if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/wrapper_src/wrapper.cpp")) {
 				SlushiUtils.printMsg("Creating hxcpp wrapper C++ file...", PROCESSING);
 			} else {
@@ -91,16 +90,22 @@ class NXLinker {
 			if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles")) {
 				FileSystem.createDirectory(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles");
 			}
+
+			makefileContent = makefileContent.replace("[SWITCH_ASSETS_DIR]", jsonFile.haxeConfig.cppOutDir + "/SWITCH_ASSETS");
 			makefileContent = makefileContent.replace("[OUT_DIR]", jsonFile.haxeConfig.cppOutDir + "/switchFiles");
 
-			if (FileSystem.exists(jsonFile.haxeConfig.cppOutDir + "/romfs")) {
-				makefileContent = makefileContent.replace("[ROMFS_ARG]", "ROMFS		:=	" + jsonFile.haxeConfig.cppOutDir + "/romfs");
+			if (FileSystem.exists(jsonFile.haxeConfig.cppOutDir + "/SWITCH_ASSETS/romfs")) {
+				makefileContent = makefileContent.replace("[ROMFS_ARG]", "ROMFS		:=	" + jsonFile.haxeConfig.cppOutDir + "/SWITCH_ASSETS/romfs");
 			}
 			else {
 				makefileContent = makefileContent.replace("[ROMFS_ARG]", "# NO ROMFS DIRECTORY FOUND");
 			}
 
 			makefileContent = makefileContent.replace("[ROMFS_DIR]", jsonFile.haxeConfig.cppOutDir + "/romfs");
+
+			makefileContent = makefileContent.replace("[APP_NAME]", jsonFile.switchConfig.appTitle);
+			makefileContent = makefileContent.replace("[APP_VERSION]", jsonFile.switchConfig.appVersion);
+			makefileContent = makefileContent.replace("[APP_AUTHOR]", jsonFile.switchConfig.appAuthor);
 
 			// Save Makefile
 			// delete temporal makefile if already exists

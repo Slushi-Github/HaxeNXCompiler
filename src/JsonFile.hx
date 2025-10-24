@@ -39,6 +39,9 @@ typedef HaxeConfig = {
 typedef SwitchConfig = {
 	projectName:String,
 	consoleIP:String,
+	appVersion:String,
+	appTitle:String,
+	appAuthor:String,
 }
 
 /**
@@ -66,15 +69,13 @@ class JsonFile {
 			if (FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json")) {
 				var jsonFile:JsonStruct = JsonFile.getJson();
 				if (jsonFile == null) {
-					SlushiUtils.printMsg("JSON file is invalid, please check it", ERROR);
-					return false;
+					throw "JSON file is invalid, please check it";
 				}
 			}
 			return true;
 		}
 		catch (e) {
-			SlushiUtils.printMsg("JSON file is invalid, please check it (" + e + ")", ERROR);
-			return false;
+			throw "JSON file is invalid, please check it (" + e + ")";
 		}
 	}
 
@@ -93,22 +94,25 @@ class JsonFile {
 						sourceDir: jsonContent.haxeConfig.sourceDir,
 						hxMain: jsonContent.haxeConfig.hxMain,
 						cppOutDir: jsonContent.haxeConfig.cppOutDir,
-						debugMode: jsonContent.haxeConfig.debugMode,
+						debugMode: jsonContent.haxeConfig.debugMode ?? false,
 						othersOptions: jsonContent.haxeConfig.othersOptions,
-						errorReportingStyle: jsonContent.haxeConfig.errorReportingStyle,
+						errorReportingStyle: jsonContent.haxeConfig.errorReportingStyle ?? "pretty",
 					},
 					switchConfig: {
-						projectName: jsonContent.switchConfig.projectName,
-						consoleIP: jsonContent.switchConfig.consoleIP,
+						projectName: jsonContent.switchConfig.projectName ?? "Project",
+						consoleIP: jsonContent.switchConfig.consoleIP ?? "0.0.0.0",
+						appVersion: jsonContent.switchConfig.appVersion ?? "1.0.0",
+						appTitle: jsonContent.switchConfig.appTitle ?? "Project",
+						appAuthor: jsonContent.switchConfig.appAuthor ?? "None",
 					},
-					deleteTempFiles: jsonContent.deleteTempFiles,
+					deleteTempFiles: jsonContent.deleteTempFiles ?? false,
 					extraLibs: jsonContent.extraLibs,
 					projectDefines: jsonContent.projectDefines,
 				};
 				return jsonStructure;
 			}
 		} catch (e) {
-			SlushiUtils.printMsg("Error loading [haxeNXConfig.json]: " + e, ERROR);
+			throw "Error loading [haxeNXConfig.json]: " + e;
 		}
 		return null;
 	}
@@ -137,6 +141,9 @@ class JsonFile {
 			switchConfig: {
 				projectName: "Project",
 				consoleIP: "0.0.0.0",
+				appVersion: "1.0.0",
+				appTitle: "Project",
+				appAuthor: "None",
 			},
 			deleteTempFiles: true,
 			extraLibs: [],
@@ -147,7 +154,7 @@ class JsonFile {
 			File.saveContent(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json", Json.stringify(jsonStructure, "\t"));
 			SlushiUtils.printMsg("Created [haxeNXConfig.json]", SUCCESS);
 		} catch (e) {
-			SlushiUtils.printMsg("Error creating [haxeNXConfig.json]: " + e, ERROR);
+			throw "Error creating [haxeNXConfig.json]: " + e;
 		}
 	}
 

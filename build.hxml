@@ -4,4 +4,8 @@
 -D HAXE_OUTPUT_PART=HaxeNXCompiler
 --resource templates/MakefileNRO@MakefileNRO
 --resource templates/WrapperCPP@WrapperCodeCPP
+--resource templates/HxNXLogoJPG@HxNXLogoJPG
 -D message.reporting=pretty
+-D HXCPP_STACK_TRACE
+-D HXCPP_CHECK_POINTER
+-D HXCPP_STACK_LINE

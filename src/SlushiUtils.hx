@@ -112,7 +112,7 @@ class SlushiUtils {
 				deleteRecursively(outDir);
 				SlushiUtils.printMsg("Deleted [" + outDir + "]", SUCCESS);
 			} catch (e:Dynamic) {
-				SlushiUtils.printMsg("Failed to delete [" + outDir + "]: " + e, ERROR);
+				throw "Failed to delete [" + outDir + "]: " + e;
 			}
 		}
 
@@ -121,7 +121,7 @@ class SlushiUtils {
 				deleteRecursively(buildDir);
 				SlushiUtils.printMsg("Deleted [" + buildDir + "]", SUCCESS);
 			} catch (e:Dynamic) {
-				SlushiUtils.printMsg("Failed to delete [" + buildDir + "]: " + e, ERROR);
+				throw "Failed to delete [" + buildDir + "]: " + e;
 			}
 		}
 	}
