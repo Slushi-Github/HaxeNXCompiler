@@ -22,7 +22,7 @@ import src.utils.DevKitProUtils;
  */
 class Main {
 	public static var haxenxcompilerString = "\x1b[38;5;214mHaxe\033[0m\x1b[38;5;81mN\x1b[38;5;1mX\033[0mCompiler (Based on \x1b[38;5;214mHx\033[0mCompile\x1b[38;5;74mU\033[0m)";
-	public static final version:String = "1.1.1";
+	public static final version:String = "1.1.2";
 	static var stdin = Sys.stdin();
 	static var stdout = Sys.stdout();
 	static var args = Sys.args();

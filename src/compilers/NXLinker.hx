@@ -92,6 +92,14 @@ class NXLinker {
 				FileSystem.createDirectory(SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles");
 			}
 			makefileContent = makefileContent.replace("[OUT_DIR]", jsonFile.haxeConfig.cppOutDir + "/switchFiles");
+
+			if (FileSystem.exists(jsonFile.haxeConfig.cppOutDir + "/romfs")) {
+				makefileContent = makefileContent.replace("[ROMFS_ARG]", "ROMFS		:=	" + jsonFile.haxeConfig.cppOutDir + "/romfs");
+			}
+			else {
+				makefileContent = makefileContent.replace("[ROMFS_ARG]", "# NO ROMFS DIRECTORY FOUND");
+			}
+
 			makefileContent = makefileContent.replace("[ROMFS_DIR]", jsonFile.haxeConfig.cppOutDir + "/romfs");
 
 			// Save Makefile

@@ -39,7 +39,7 @@ BUILD		:=	build
 SOURCES		:=	[CPP_WRAPPER_DIR]
 DATA		:=	data
 INCLUDES	:=	[SOURCE_DIR]/include
-ROMFS		:=	[ROMFS_DIR]
+[ROMFS_ARG]
 
 HAXE_LIBMAIN := [HAXE_MAIN_LIB]
 HXCPP_PATH := `haxelib path hxcpp | head -n 1`

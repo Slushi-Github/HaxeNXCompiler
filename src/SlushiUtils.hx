@@ -84,26 +84,6 @@ class SlushiUtils {
 	}
 
 	/**
-	 * Returns a string explaining the exit code.
-	 * @param number The exit code number.
-	 * @return String
-	 */
-	public static function getExitCodeExplanation(number:Int):String {
-		switch (number) {
-			case 1:
-				return "Compilation failed in Haxe part";
-			case 2:
-				return "Compilation failed in Nintendo Switch part";
-			case 3:
-				return "Error loading some part of [haxeNXConfig.json]";
-			case 4:
-				return "Error creating some file";
-			default:
-				return "Unknown error";
-		}
-	}
-
-	/**
 	 * Deletes a file or directory recursively.
 	 * @param path 
 	 */

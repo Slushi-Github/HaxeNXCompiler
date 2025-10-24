@@ -14,6 +14,7 @@ import haxe.crypto.Md5;
 
 import src.JsonFile;
 import src.SlushiUtils;
+import src.compilers.HaxeCompiler;
 
 using StringTools;
 
@@ -37,6 +38,10 @@ class AssetsManager {
      * Search for assets and copy them to the output folder
      */
     public static function searchAndGetAssets():Void {
+		if (HaxeCompiler.getExitCode() != 0) {
+			return;
+		}
+
         var outputDir = jsonFile.haxeConfig.cppOutDir;
         var basePath = SlushiUtils.getPathFromCurrentTerminal();
         var outputPath = Path.join([basePath, outputDir]);

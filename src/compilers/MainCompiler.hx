@@ -112,7 +112,7 @@ class MainCompiler {
 
 		// First compile Haxe part, copy the assets files and then compile Nintendo Switch part
 		HaxeCompiler.init();
-		SlushiUtils.printMsg("----------------------", NONE, "\n");
+		SlushiUtils.printMsg("----------------------", NONE);
 		AssetsManager.searchAndGetAssets();
 		SlushiUtils.printMsg("----------------------\n", NONE);
 		NXLinker.init();
