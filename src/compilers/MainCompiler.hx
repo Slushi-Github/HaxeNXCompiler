@@ -30,6 +30,12 @@ class MainCompiler {
 	 * Starts the compilation of the project.
 	 */
 	public static function start(arg2:String, arg3:String):Void {
+
+		if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json")) {
+			SlushiUtils.printMsg("Can't find [haxeNXConfig.json]", ERROR);
+			return;
+		}
+
 		var jsonVersion:String = JsonFile.getJson().programVersion;
 		var forced:Bool = jsonVersion.endsWith(":forced");
 		var versionStr = forced ? jsonVersion.split(":")[0] : jsonVersion;

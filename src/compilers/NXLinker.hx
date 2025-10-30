@@ -20,13 +20,20 @@ using StringTools;
 
 /**
  * The NXLinker class is used to link the project to Nintendo Switch
- * using [DevKitPro](https://devkitpro.org) MakeFile.
+ * using [DevKitPro](https://devkitpro.org) MakeFile as a placeholder
  * 
  * Author: Slushi.
  */
 class NXLinker {
 	static var jsonFile:JsonStruct = JsonFile.getJson();
 	static var exitCodeNum:Int = 0;
+
+	/**
+	 * The maximum number of jobs that can be executed in parallel
+	 * 
+	 * For now it's hardcoded to 2
+	 */
+	static var maxJobs:Int = 2;
 
 	public static function init() {
 		if (HaxeCompiler.getExitCode() != 0) {
@@ -38,11 +45,31 @@ class NXLinker {
 			return;
 		}
 
+		if (jsonFile.switchConfig == null) {
+			SlushiUtils.printMsg("Error loading [haxeNXConfig.json -> switchConfig]", ERROR);
+			return;
+		}
+
+		if (jsonFile.haxeConfig == null) {
+			SlushiUtils.printMsg("Error loading [haxeNXConfig.json -> haxeConfig]", ERROR);
+			return;
+		}
+
+		if (jsonFile.haxeConfig?.cppOutDir == null) {
+			SlushiUtils.printMsg("Error loading [haxeNXConfig.json -> haxeConfig.cppOutDir]", ERROR);
+			return;
+		}
+
 		// Check if all required fields are set
-		if (jsonFile.switchConfig.projectName == "") {
+		if (jsonFile.switchConfig?.projectName == "") {
 			SlushiUtils.printMsg("projectName in [haxeNXConfig.json -> switchConfig.projectName] is empty", ERROR);
 			exitCodeNum = 3;
 			return;
+		}
+
+		maxJobs = jsonFile.makeFileMaxJobs ?? 2;
+		if (maxJobs <= 0) {
+			maxJobs = 2;
 		}
 
 		SlushiUtils.printMsg("Trying to compile to a \x1b[38;5;1mNintendo Switch\033[0m project -> \x1b[38;5;110m[" + jsonFile.switchConfig.projectName + "]\033[0m...", PROCESSING);
@@ -122,10 +149,10 @@ class NXLinker {
 			return;
 		}
 
-		SlushiUtils.printMsg("Compiling to ARM64/\x1b[38;5;1mNintendo Switch\033[0m...\n------------------", PROCESSING);
+		SlushiUtils.printMsg("Compiling to ARM64/\x1b[38;5;1mNintendo Switch\033[0m using " + maxJobs + " threads...\n------------------", PROCESSING);
 
 		var startTime:Float = Sys.time();
-		var compileProcess = Sys.command("make");
+		var compileProcess = Sys.command("make" + " -j" + maxJobs);
 
 		if (compileProcess != 0) {
 			SlushiUtils.printMsg("\x1b[38;5;1m------------------\033[0m", NONE);

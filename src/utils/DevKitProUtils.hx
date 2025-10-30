@@ -26,8 +26,8 @@ class DevKitProUtils {
 			return;
 		}
 
-		var elfPath:String = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles/"
-			+ jsonFile.switchConfig.projectName + ".elf";
+		var elfPath:String = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig?.cppOutDir + "/switchFiles/"
+			+ jsonFile.switchConfig?.projectName + ".elf";
 		if (!FileSystem.exists(elfPath)) {
 			SlushiUtils.printMsg("[.elf] file not found", ERROR);
 			return;
@@ -51,10 +51,8 @@ class DevKitProUtils {
 	 * Sends the compiled .nro file to the Switch console.
 	 */
 	public static function send(arg1:String):Void {
-		var filePath:String = "";
-
-		filePath = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig.cppOutDir + "/switchFiles/" + jsonFile.switchConfig.projectName
-			+ ".nro";
+		var filePath:String = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig?.cppOutDir + "/switchFiles/"
+			+ jsonFile.switchConfig?.projectName + ".nro";
 
 		if (!FileSystem.exists(filePath)) {
 			SlushiUtils.printMsg("NRO file not found", ERROR);

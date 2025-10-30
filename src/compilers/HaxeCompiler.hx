@@ -89,6 +89,7 @@ class HaxeCompiler {
 	-D HAXENXCOMPILER_VERSION="${Main.version}"
 	-D HAXENXCOMPILER_JSON_SWITCH_PROJECTNAME="${jsonFile.switchConfig.projectName}"
 	${finalHxDefines().main}
+	${finalHxDefines().hxlibs}
 	# Extra options
 	${finalOtherOptions()}
 	${finalHxDefines().hxDef}
@@ -166,8 +167,8 @@ class HaxeCompiler {
 		return libs;
 	}
 
-	static function finalHxDefines():{main:String, hxDef:String} {
-		var defines = {main: "", hxDef: ""};
+	static function finalHxDefines():{main:String, hxDef:String, hxlibs:String} {
+		var defines = {main: "", hxDef: "", hxlibs: ""};
 
 		for (define in Defines.parseHXDefines().main) {
 			defines.main += define + "\n\t";
@@ -175,6 +176,10 @@ class HaxeCompiler {
 
 		for (define in Defines.parseHXDefines().hxDef) {
 			defines.hxDef += define + "\n\t";
+		}
+
+		for (define in Defines.parseHXDefines().hxlibs) {
+			defines.hxlibs += define + "\n\t";
 		}
 
 		return defines;

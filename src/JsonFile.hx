@@ -54,6 +54,7 @@ typedef JsonStruct = {
 	deleteTempFiles:Bool,
 	extraLibs:Array<String>,
 	projectDefines:Array<String>,
+	makeFileMaxJobs:Int,
 }
 
 /**
@@ -66,7 +67,10 @@ class JsonFile {
 	 */
 	public static function checkJson():Bool {
 		try {
-			if (FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json")) {
+			if (!FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json")) {
+				return false;
+			}
+			else if (FileSystem.exists(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json")) {
 				var jsonFile:JsonStruct = JsonFile.getJson();
 				if (jsonFile == null) {
 					throw "JSON file is invalid, please check it";
@@ -89,27 +93,31 @@ class JsonFile {
 				var jsonContent:Dynamic = Json.parse(File.getContent(SlushiUtils.getPathFromCurrentTerminal() + "/haxeNXConfig.json"));
 
 				var jsonStructure:JsonStruct = {
-					programVersion: jsonContent.programVersion,
+					programVersion: jsonContent.programVersion ?? Main.version,
 					haxeConfig: {
-						sourceDir: jsonContent.haxeConfig.sourceDir,
-						hxMain: jsonContent.haxeConfig.hxMain,
-						cppOutDir: jsonContent.haxeConfig.cppOutDir,
-						debugMode: jsonContent.haxeConfig.debugMode ?? false,
-						othersOptions: jsonContent.haxeConfig.othersOptions,
-						errorReportingStyle: jsonContent.haxeConfig.errorReportingStyle ?? "pretty",
+						sourceDir: jsonContent.haxeConfig?.sourceDir,
+						hxMain: jsonContent.haxeConfig?.hxMain ?? "Main",
+						cppOutDir: jsonContent.haxeConfig?.cppOutDir ?? "build",
+						debugMode: jsonContent.haxeConfig?.debugMode ?? false,
+						othersOptions: jsonContent.haxeConfig?.othersOptions ?? new Array<String>(),
+						errorReportingStyle: jsonContent.haxeConfig?.errorReportingStyle ?? "pretty",
 					},
 					switchConfig: {
-						projectName: jsonContent.switchConfig.projectName ?? "Project",
-						consoleIP: jsonContent.switchConfig.consoleIP ?? "0.0.0.0",
-						appVersion: jsonContent.switchConfig.appVersion ?? "1.0.0",
-						appTitle: jsonContent.switchConfig.appTitle ?? "Project",
-						appAuthor: jsonContent.switchConfig.appAuthor ?? "None",
+						projectName: jsonContent.switchConfig?.projectName ?? "Project",
+						consoleIP: jsonContent.switchConfig?.consoleIP ?? "0.0.0.0",
+						appVersion: jsonContent.switchConfig?.appVersion ?? "1.0.0",
+						appTitle: jsonContent.switchConfig?.appTitle ?? "Project",
+						appAuthor: jsonContent.switchConfig?.appAuthor ?? "None",
 					},
 					deleteTempFiles: jsonContent.deleteTempFiles ?? false,
-					extraLibs: jsonContent.extraLibs,
-					projectDefines: jsonContent.projectDefines,
+					extraLibs: jsonContent.extraLibs ?? new Array<String>(),
+					projectDefines: jsonContent.projectDefines ?? new Array<String>(),
+					makeFileMaxJobs: jsonContent.makeFileMaxJobs ?? 2,
 				};
 				return jsonStructure;
+			}
+			else {
+				SlushiUtils.printMsg("[haxeNXConfig.json] not found!", ERROR);
 			}
 		} catch (e) {
 			throw "Error loading [haxeNXConfig.json]: " + e;
@@ -148,6 +156,7 @@ class JsonFile {
 			deleteTempFiles: true,
 			extraLibs: [],
 			projectDefines: [],
+			makeFileMaxJobs: 2,
 		};
 
 		try {
@@ -173,7 +182,7 @@ class JsonFile {
 		var defines:String = "";
 
 		defines += "-D HAXENXCOMPILER_VERSION=\\\"" + Main.version + "\\\" ";
-		defines += "-D HAXENXCOMPILER_JSON_SWITCH_PROJECTNAME=\\\"" + jsonFile.switchConfig.projectName + "\\\" ";
+		defines += "-D HAXENXCOMPILER_JSON_SWITCH_PROJECTNAME=\\\"" + jsonFile.switchConfig?.projectName + "\\\" ";
 
 		var dateNow:Date = Date.now();
 		var dateString = dateNow.getHours() + ":" + StringTools.lpad(dateNow.getMinutes() + "", "0", 2) + ":"

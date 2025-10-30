@@ -39,6 +39,7 @@ typedef HxNXLibJSONStruct = {
 typedef HxNXLibStruct = {
     libJSONData:HxNXLibJSONStruct,
     hxLibName:String,
+	hxLibVersion:String
 }
 
 /**
@@ -50,7 +51,8 @@ typedef HxNXLibStruct = {
  * now be as many as the user needs.
  * In addition to searching for each Haxe library, if a library 
  * requires additional Haxe libraries, the compiler will search for them and if 
- * they exist, it will import the necessary data (like more Haxe libraries or the C++ libraries for the Nintendo Switch).
+ * they exist, it will import the necessary data (like more Haxe libraries 
+ * or the C++ libraries for the Nintendo Switch).
  *
  * Author: Slushi.
  */
@@ -63,11 +65,18 @@ class LibsManager {
 		var libs:Array<HxNXLibStruct> = [];
 		var importedLibs = new Map<String, Bool>();
 		if (mainJsonFile.extraLibs.length == 0) {
-			SlushiUtils.printMsg("No extra libs found in the main JSON file.", WARN);
+			SlushiUtils.printMsg("No extra libs found in the main JSON file, skipping.", INFO);
 			return libs;
 		}
 
 		var requiredMainLibs:Array<String> = mainJsonFile.extraLibs;
+
+		// Why import hx_hx_libnx again? It's already hardcoded in the HXML template heh
+		if (requiredMainLibs.contains("hx_libnx")) {
+			SlushiUtils.printMsg("The \"hx_libnx\" library is already imported by HaxeNXCompiler, it will not be imported again.", WARN);
+			requiredMainLibs.remove("hx_libnx");
+		}
+
 		var mainPath:String = "";
 		var haxelibPath:String = Sys.getEnv("HAXEPATH") + "/lib";
 
@@ -115,6 +124,7 @@ class LibsManager {
 						cppDefines: []
 					},
 					hxLibName: libName,
+					hxLibVersion: "0.0.0"
 				});
 				return;
 			}
@@ -124,19 +134,20 @@ class LibsManager {
 
 				libs.push({
 					libJSONData: {
-						libVersion: jsonContent.libVersion,
-						haxeLibs: jsonContent.haxeLibs,
-						switchLibs: jsonContent.switchLibs,
-						hxDefines: jsonContent.hxDefines,
-						mainDefines: jsonContent.mainDefines,
-						cDefines: jsonContent.cDefines,
-						cppDefines: jsonContent.cppDefines
+						libVersion: jsonContent.libVersion ?? "0.0.0",
+						haxeLibs: jsonContent.haxeLibs ?? new Array<String>(),
+						switchLibs: jsonContent.switchLibs ?? new Array<String>(),
+						hxDefines: jsonContent.hxDefines ?? new Array<String>(),
+						mainDefines: jsonContent.mainDefines ?? new Array<String>(),
+						cDefines: jsonContent.cDefines ?? new Array<String>(),
+						cppDefines: jsonContent.cppDefines ?? new Array<String>(),
 					},
 					hxLibName: libName,
+					hxLibVersion: jsonContent.libVersion ?? "0.0.0"
 				});
 
 				// Recursively process extra haxeLibs
-				var jsonExtraLibs:Array<String> = jsonContent.haxeLibs;
+				var jsonExtraLibs:Array<String> = jsonContent.haxeLibs ?? new Array<String>();
 				for (extraLib in jsonExtraLibs) {
 					var extraLibName = extraLib;
 					var extraLibVersion:String = null;
@@ -170,9 +181,9 @@ class LibsManager {
 		var libs:Array<String> = [];
 
 		for (i in 0...MainCompiler.libs.length) {
-			libs.push("-lib " + MainCompiler.libs[i].hxLibName);
+			libs.push("-lib " + MainCompiler.libs[i].hxLibName ?? "");
 
-			for (lib in MainCompiler.libs[i].libJSONData.haxeLibs) {
+			for (lib in MainCompiler.libs[i].libJSONData.haxeLibs ?? new Array<String>()) {
 				if (lib == null || lib == "") {
 					continue;
 				}
@@ -187,11 +198,11 @@ class LibsManager {
 		var libs:Array<String> = [];
 
 		for (i in 0...MainCompiler.libs.length) {
-			if (MainCompiler.libs[i].libJSONData.switchLibs.length <= 0) {
+			if (MainCompiler.libs[i].libJSONData.switchLibs?.length ?? 0 <= 0 ) {
 				continue;
 			}
 
-			for (lib in MainCompiler.libs[i].libJSONData.switchLibs) {
+			for (lib in MainCompiler.libs[i].libJSONData.switchLibs ?? new Array<String>()) {
 				if (lib == null || lib == "") {
 					continue;
 				}

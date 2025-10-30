@@ -125,4 +125,38 @@ class SlushiUtils {
 			}
 		}
 	}
+
+
+	/**
+	 * Prepares the new project, first it checks if the user has installed DevKitPro and DevKitA64
+	 * @param imported 
+	 * @param lib 
+	 */
+	public static function prepareProject(imported:Bool, ?lib:String):Void {
+		var fail:Bool = false;
+		var devkitproEnv = Sys.getEnv("DEVKITPRO");
+
+		SlushiUtils.printMsg("Preparing project...", PROCESSING);
+
+		if (devkitproEnv == null || !FileSystem.exists(devkitproEnv)) {
+			SlushiUtils.printMsg("DEVKITPRO environment variable not found", ERROR);
+			fail = true;
+		}
+		else if ((devkitproEnv == null || !FileSystem.exists(devkitproEnv + "/devkitA64")) && !fail) {
+			SlushiUtils.printMsg("DevkitA64 not found", ERROR);
+			fail = true;
+		}
+
+		if (fail) {
+			SlushiUtils.printMsg("Failed to prepare project. Can't find DevKitPro or DevKitA64, please install them (Or add them to your PATH) and try again:\n\thttps://devkitpro.org/wiki/devkitPro_pacman", NONE);
+			return;
+		}
+
+		if (imported) {
+			JsonFile.importJSON(lib);
+		}
+		else {
+			JsonFile.createJson();
+		}
+	}
 }

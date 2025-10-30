@@ -7,11 +7,18 @@ Using this utility (Inspired by [HxCompileU](https://github.com/Slushi-Github/hx
 
 This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-team) to use Haxe on the Nintendo Switch. I used part of the [original project](https://github.com/retronx-team/switch-haxe) for this, so credit goes to them for achieving this in the first place!
 
-**This project is being tested with Haxe 4.3.7 and a Nintendo Switch V2 with firmware 20.4.0 (AMS 1.9.4).**
+**This project is being tested with Haxe 4.3.6 and a Nintendo Switch V2 with firmware 20.4.0 and Atmosphère 1.9.5.**
 
 Officially there are supported libraries to be used in conjunction with HaxeNXCompiler:
 
 - [hx_libnx](https://github.com/Slushi-Github/hx_libnx): Haxe/hxcpp @:native bindings for libnx, the Nintendo Switch's homebrew library.
+
+-----
+
+## Current problems:
+
+ - Apparently there is no full support for `sys.net.Socket`.
+ - Critical issue related to hxcpp and its garbage collector when the program ends, causing Atmosphère to crash sometimes.
 
 -----
 
@@ -99,6 +106,14 @@ After that, you will get your executable ``HaxeNXCompiler`` in the "export" fold
  - If you want start a server, you can use the following command:
 
     ``{haxeNXCompilerProgram} --send --server`` or ``{haxeNXCompilerProgram} --s --s``
+
+-----
+
+#### You can get errors from a log file using the following command:
+
+``{haxeNXCompilerProgram} --crashAnalyzer`` or ``{haxeNXCompilerProgram} --ca``
+
+**THIS IS TOO EXPERIMENTAL!**
 
 -----
 
