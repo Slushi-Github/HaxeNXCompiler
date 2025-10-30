@@ -42,7 +42,7 @@ class Main {
 			}
 
 			if (args[0] != "--import" && args[0] != "--i" && args[0] != "--prepare" && args[0] != "--p") {
-				// if (!JsonFile.checkJson())
+				if (!JsonFile.checkJson())
 					return;
 			}
 
