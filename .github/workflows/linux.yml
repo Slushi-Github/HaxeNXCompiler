@@ -14,7 +14,7 @@ jobs:
         with:
           haxe-version: 4.3.5
 
-      - name: Install Haxe libraries
+      - name: Installing/Updating hxcpp
         run: |
           haxelib --always install hxcpp
 

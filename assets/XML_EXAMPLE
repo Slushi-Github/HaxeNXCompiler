@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    HaxeNXCompiler Project File - Complete Example | Version 1.0.0
+    This file contains ALL possible configuration options available
+
+	This IS A EXAMPLE FILE, CHANGE THE VALUES ACCORDING TO YOUR NEEDS!
+    
+    Author: Slushi
+    https://github.com/Slushi-Github/HaxeNXCompiler
+-->
+<project>
+	<!-- ========================================== -->
+	<!-- COMPILER VERSION REQUIREMENT (Optional)    -->
+	<!-- ========================================== -->
+	<!-- Ensure minimum compiler version -->
+	<!-- Operators: =, >, >=, <, <= -->
+	<hxnxcompiler version=">=3.0.0" />
+
+	<!-- ========================================== -->
+	<!-- HAXE CONFIGURATION (Required)              -->
+	<!-- ========================================== -->
+
+	<!-- Source directory -->
+	<source path="source" />
+
+	<!-- Main class entry point -->
+	<haxemain name="Main" />
+
+	<!-- Error reporting style: pretty, indent, or classic -->
+	<haxeerrorreportingstyle type="pretty" />
+
+	<!-- hxcpp C++ output directory -->
+	<cppoutput path="output" />
+
+	<!-- Haxe debug mode -->
+	<haxedebug value="false"/>
+
+	<!-- ========================================== -->
+	<!-- NINTENDO SWITCH CONFIGURATION (Required)   -->
+	<!-- ========================================== -->
+
+	<!-- Project name and console IP for deployment -->
+	<switchproject name="MyAwesomeGame" consoleip="192.168.1.100"/>
+
+	<!-- Application metadata for the Nintendo Switch project (This is shown in the homebrew menu). -->
+	<switchmeta apptitle="My Awesome Game" appversion="1.0.0" appauthor="YourName" />
+
+	<!-- ========================================== -->
+	<!-- BUILD CONFIGURATION                        -->
+	<!-- ========================================== -->
+
+	<!-- Number of parallel jobs for make (1-16), recommend only 2 or 3, the MakeFile part is relatively short. -->
+	<makefilejobs value="2" />
+
+	<!-- Send .nro file to Nintendo Switch after successful compilation -->
+	<sendaftercompile value="false"/>
+
+	<!-- Delete temporary files after compilation (Not recommended if you want autocompletion with the Haxe extension) -->
+	<deletetemporalfiles value="false"/>
+
+	<!-- ========================================== -->
+	<!-- DEFINES (For conditional compilation)      -->
+	<!-- ========================================== -->
+
+	<!-- Global defines (available in Haxe and C/C++) -->
+	<define name="DEBUG"/>
+	<define name="GAME_VERSION" value="1.0.0"/>
+	<define name="USE_PHYSICS"/>
+
+	<!-- ========================================== -->
+	<!-- HAXE LIBRARIES                             -->
+	<!-- ========================================== -->
+
+	<!-- Basic library without version -->
+	<haxelib name="haxe-library" />
+
+	<!-- Library with specific version -->
+	<haxelib name="haxe-library2" version="1.2.0" />
+
+	<!-- Conditional library (only if USE_PHYSICS is defined) -->
+	<haxelib name="haxe-library3" if="USE_PHYSICS" />
+
+	<!-- More libraries -->
+	<haxelib name="haxe-library4" version="8.0.0" />
+	<haxelib name="haxe-library5" version="1.9.0" />
+
+	<!-- ========================================== -->
+	<!-- NINTENDO SWITCH LIBRARIES (For MakeFile)   -->
+	<!-- ========================================== -->
+
+	<!-- These are -l flags for the linker -->
+	<switchlib name="cpplib1" />
+	<switchlib name="cpplib2" />
+	<switchlib name="cpplib3" />
+	<switchlib name="cpplib4" />
+	<switchlib name="cpplib5" />
+	<switchlib name="cpplib6" />
+
+	<!-- ========================================== -->
+	<!-- HAXE DEFINES                               -->
+	<!-- ========================================== -->
+
+	<!-- Haxe compiler defines (-D flags) -->
+	<haxedef name="NO_TRACES"/>
+	<haxedef name="GAME_NAME" value="MyGame"/>
+	<haxedef name="MAX_PLAYERS" value="4"/>
+
+	<!-- Conditional defines -->
+	<haxedef name="DEBUG_PHYSICS" if="DEBUG"/>
+
+	<!-- ========================================== -->
+	<!-- C/C++ DEFINES (For MakeFile)               -->
+	<!-- ========================================== -->
+
+	<!-- C defines -->
+	<cdef name="__SWITCH__"/>
+	<cdef name="NANOVG_GLES3"/>
+	<cdef name="GL_SILENCE_DEPRECATION"/>
+
+	<!-- C++ defines -->
+	<cppdef name="__SWITCH__"/>
+	<cppdef name="HXCPP_STACK_TRACE"/>
+	<cppdef name="HXCPP_VISIT_ALLOCS" if="DEBUG"/>
+
+	<!-- ========================================== -->
+	<!-- HAXE FLAGS                                 -->
+	<!-- ========================================== -->
+
+	<!-- Compiler flags for Haxe -->
+	<haxeflag name="-dce" value="full"/>
+	<haxeflag name="--macro" value="include('source')"/>
+	<haxeflag name="-v" if="DEBUG"/>
+	<haxeflag name="--times" if="DEBUG"/>
+
+	<!-- ========================================== -->
+	<!-- C/C++ FLAGS (For MakeFile)                 -->
+	<!-- ========================================== -->
+
+	<!-- C compiler flags -->
+	<cflag name="-O2"/>
+	<cflag name="-fexceptions"/>
+	<cflag name="-Wall" if="DEBUG"/>
+
+	<!-- C++ compiler flags -->
+	<cppflag name="-O2"/>
+	<cppflag name="-std=c++11"/>
+	<cppflag name="-fexceptions"/>
+	<cppflag name="-Wall" if="DEBUG"/>
+	<cppflag name="-Wextra" if="DEBUG"/>
+
+	<!-- ========================================== -->
+	<!-- CONDITIONAL SECTIONS                       -->
+	<!-- ========================================== -->
+
+	<!-- Execute when DEBUG is defined -->
+	<section if="DEBUG">
+		<echo value="Building in DEBUG mode"/>
+		<echo value="Extra checks enabled"/>
+	</section>
+
+	<!-- Execute when USE_PHYSICS is defined -->
+	<section if="USE_PHYSICS">
+		<echo value="Physics engine enabled"/>
+	</section>
+
+	<!-- Execute when DEBUG is NOT defined -->
+	<section if="!DEBUG">
+		<echo value="Building in RELEASE mode"/>
+		<echo value="Optimizations enabled"/>
+	</section>
+
+	<!-- Conditional error (stops compilation) -->
+	<section if="DEBUG">
+		<!-- This error only triggers if NO_PHYSICS is also defined -->
+		<error value="Cannot use DEBUG mode without physics!" if="!USE_PHYSICS"/>
+	</section>
+
+</project>

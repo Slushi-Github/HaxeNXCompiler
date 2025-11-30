@@ -14,7 +14,7 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.5
-      - name: Installing/Updating libraries
+      - name: Installing/Updating hxcpp
         run: |
           haxelib --always install hxcpp
         shell: cmd

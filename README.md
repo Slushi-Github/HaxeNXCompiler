@@ -1,158 +1,60 @@
 <h1 align="center">HaxeNXCompiler</h1>
-<h2 align="center">A tool for creating homebrew for the Nintendo Switch using Haxe</h2>
+<h2 align="center">A tool for creating homebrew for the Nintendo Switch using Haxe!</h2>
 
-![mainImage](https://github.com/Slushi-Github/HaxeNXCompiler/blob/main/docs/readme/MainImage.png)
+![mainImage](docs/readme/MainImage.png)
 
-Using this utility (Inspired by [HxCompileU](https://github.com/Slushi-Github/hxCompileU)) you can compile code from Haxe to the Nintendo Switch using [DevKitPro](https://devkitpro.org) and [custom hxcpp fork](https://github.com/Slushi-Github/hxcpp-nx), for creating homebrew for the Nintendo Switch using Haxe.
+---------
 
-This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-team) to use Haxe on the Nintendo Switch. I used part of the [original project](https://github.com/retronx-team/switch-haxe) for this, so credit goes to them for achieving this in the first place!
+A tool designed so that, together with a [custom hxcpp fork](https://github.com/Slushi-Github/hxcpp-nx) and the DevKita64 tools, you can compile a [Haxe](https://haxe.org) program for the Nintendo Switch and even for other platforms!
 
-**This project is being tested with Haxe 4.3.6 and a Nintendo Switch V2 with firmware 20.4.0 and Atmosphère 1.9.5.**
+This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-team) to use Haxe on the Nintendo Switch. I used part of the [original project](https://github.com/retronx-team/switch-haxe) for this so credit goes to them for achieving this in the first place!
 
-Officially there are supported libraries to be used in conjunction with HaxeNXCompiler:
+**This project is being tested with Haxe 4.3.6 and a Nintendo Switch V2 with firmware 20.4.0 and Atmosphère 1.9.4.**
 
-- [hx_libnx](https://github.com/Slushi-Github/hx_libnx): Haxe/hxcpp @:native bindings for libnx, the Nintendo Switch's homebrew library.
+---------
 
------
+**Officially** there are supported libraries to be used in conjunction with HaxeNXCompiler:
 
-## Current problems:
+- [hx_libnx](https://github.com/Slushi-Github/hx_libnx): Haxe/hxcpp ``@:native`` bindings for libnx, the Nintendo Switch's homebrew library.
 
- - Apparently there is no full support for `sys.net.Socket`.
- - Critical issue related to hxcpp and its garbage collector when the program ends, causing Atmosphère to crash sometimes.
+- SDL2 (And SDL2_Image, SDL2_Mixer): Haxe/hxcpp ``@:native`` bindings for SDL 2.28 libraries (PRIVATE LIBRARY).
 
------
+- OpenGL 4.3 ES: Haxe/hxcpp ``@:native`` bindings for the OpenGL 4.3 ES, a 3D graphics library (PRIVATE LIBRARY).
 
-## How?
+- libVorbis: Haxe/hxcpp ``@:native`` bindings for libvorbis, a decoder for the OGG Vorbis audio format (PRIVATE LIBRARY).
 
-Well... Unlike the Wii U, where using hxcpp causes many problems, and to achieve that I had to use [Reflaxe/C++ (Amazing library!)](https://github.com/SomeRanDev/reflaxe.CPP) to be able to use Haxe on that console. With the Nintendo Switch, hxcpp compiles perfectly!
+- OpenAL Soft: Haxe/hxcpp ``@:native`` bindings for OpenAL Soft, a 3D audio library (PRIVATE LIBRARY AND NOT FINISHED).
 
-I knew even before I had a Wii U that the [RetroNX Team](https://github.com/retronx-team) had attempted to [use Haxe on the Nintendo Switch](https://github.com/retronx-team/switch-haxe), but that project is now more than five years old and I don't know if it still works. This program rescues what they did and does so using something more recent with respect to Haxe and hxcpp, and it uses inspiration from [HxCompileU](https://github.com/Slushi-Github/hxCompileU) to be able to easily compile Haxe code for the Nintendo Switch, in this case without the limitations that [HxCompileU](https://github.com/Slushi-Github/hxCompileU) may have because it uses [Reflaxe/C++ (And I'm not saying it's a bad library!)](https://github.com/SomeRanDev/reflaxe.CPP).
+- FontStash: Haxe/hxcpp ``@:native`` bindings for FontStash, a font rendering library compatible with OpenGL and OpenGL ES (PRIVATE LIBRARY AND NOT FINISHED).
 
-This does not work the same as [HxCompileU](https://github.com/Slushi-Github/hxCompileU). Haxe and hxcpp handle all possible compilation, and then only the link and creation of the program made for use on the Nintendo Switch are done.
+The term *"**officially**"* does not mean that only these libraries will work with this tool; they are simply the libraries that I have created specifically for this project and for the Nintendo Switch. However, you can try any libraries you want that are in [Haxelib](https://lib.haxe.org)! (with certain limitations; remember that this is a separate target from the normal ones and is experimental; libraries that depend on C++ libraries will generally not work without changes. And no, don't try to use HaxeFlixel on this target... for now?).
 
-This program what it does, is that by means of some data stored in a JSON file (``haxeNXConfig.json``), it generates a MakeFile and a [HXML](https://haxe.org/manual/compiler-usage-hxml.html) file with those data of the JSON, of normal first it will try to execute the [HXML](https://haxe.org/manual/compiler-usage-hxml.html) with Haxe, [hxcpp](https://github.com/Slushi-Github/hxcpp-nx) is in charge of compiling the C++ code, if the compilation with Haxe is successful, it executes the MakeFile with Make and starts the link of that C++ code to the Nintendo Switch, if this is also successful, that's it, you have your homebrew for the Nintendo Switch made with Haxe!
+## How is this possible?
 
-## Why?
+Well, let's start at the beginning.
 
-Well, I've been having fun using the Nintendo Wii U with Haxe through my [HxCompileU](https://github.com/Slushi-Github/hxCompileU) project, and I was able to get a Nintendo Switch. I already knew that Haxe could work there without as many problems as on the Wii U, and it's even officially supported, but obviously under the terms of the Nintendo Developer Portal. This project aims to do the same thing without being part of that Nintendo program and to do everything through the homebrew that exists for the Nintendo Switch.
+Haxe on Nintendo Switch can be used officially through the Nintendo Developer program, giving access to modified versions of certain Haxe libraries, but as far as I know, these are old libraries alongside an old version of Haxe and an old version of hxcpp.
 
------
+When I started wanting a Wii U, I found out about a very old case of bringing Haxe, or rather [OpenFL](https://www.openfl.org), to consoles, called ["OpenFL for Home Game Consoles."](https://www.fortressofdoors.com/openfl-for-home-game-consoles). Among the “targets” was the Wii U. I don't know what came of that, but I don't think it was anything important or interesting. I currently understand that the only console where Haxe is supported is the Nintendo Switch.
 
-# Usage
+To which I had found a project that modified hxcpp to make it functional with the Nintendo Switch, but it was a very basic attempt at just a "hello world.", that project was [switch-haxe](https://github.com/retronx-team/switch-haxe). 
 
-The basic usage of HaxeNXCompiler is as follows:
+Although with the Wii U I had to choose to use [Reflaxe/C++](https://github.com/SomeRanDev/reflaxe.CPP) to use Haxe there, which resulted in [HxCompileU](https://github.com/Slushi-Github/hxCompileU), when I got a Nintendo Switch, I already knew that I could use Haxe with hxcpp on this console. And that's what this project is about:
 
-You need:
-- [DevKitPro](https://devkitpro.org/wiki/Getting_Started)
+Providing the ability to use Haxe on a Nintendo Switch freely and with what the homebrew of this console allows!
 
-- ``libnx`` (Install the ``libnx`` library from DevKitPro repository)
+## What does this tool do?
 
-- [Haxe](https://haxe.org/)
+This tool helps you compile a Haxe project more easily and obtain executable files for a Nintendo Switch.
 
-- [hxcpp (fork)](https://github.com/Slushi-Github/hxcpp-nx)
+An XML project file is used, based on the XML file of Haxe projects made with [Lime](https://lime.openfl.org)/[OpenFL](https://www.openfl.org).
 
-- [hx_libnx](https://github.com/Slushi-Github/hx_libnx)
+Want to start a new project? Then go to the guide on [how to get started](docs/guides/GetStarted.md).
 
-First, you need compilate this project, or you can use the precompiled version that is in the [releases](https://github.com/Slushi-Github/HaxeNXCompiler/releases), or you can download it from the [GitHub Actions](https://github.com/Slushi-Github/HaxeNXCompiler/actions). I recommend using the [GitHub Actions](https://github.com/Slushi-Github/HaxeNXCompiler/actions) option.
+Want create a library for this tool? Then go to the guide on [how to create a library](docs/guides/LibrariesGuide.md).
 
-```bash
-# Just clone the repository
-git clone https://github.com/Slushi-Github/HaxeNXCompiler.git
-
-# Install hxcpp
-haxelib git hxcpp https://github.com/Slushi-Github/hxcpp-nx.git
-
-# Install hx_libnx
-haxelib git hx_libnx https://github.com/Slushi-Github/hx_libnx.git
-
-# Compile the project
-cd HaxeNXCompiler
-haxe build.hxml
-```
-
-After that, you will get your executable ``HaxeNXCompiler`` in the "export" folder, for the moment, copy it to the root of the project folder you need it.
-
------
-
-## How to use
-
-#### First, initialize your project, that is, create the configuration JSON file that HaxeNXCompiler will use, you can create it using this command:
-``{haxeNXCompilerProgram} --prepare`` or ``{haxeNXCompilerProgram} --p``
-
- - Or you can import an existing JSON file from a Haxe library with the following command:
-``{haxeNXCompilerProgram} --import HAXE_LIB`` or ``{haxeNXCompilerProgram} --i HAXE_LIB``
-
------
-
-#### Once you have configured your JSON file to what your project needs, you can use the following command to compile it:
-``{haxeNXCompilerProgram} --compile`` or ``{haxeNXCompilerProgram} --c``
-
- - If you want enable the Haxe debug mode, you can use the following command:
-
-    ``{haxeNXCompilerProgram} --compile --debug``
-
------
-
-#### You can also use the following command search a line of code in the ``.elf`` file from a line address of some log using devkitA64's ``aarch64-none-elf-addr2line`` program:
-
-``{haxeNXCompilerProgram} --searchProblem [lineAddress]`` or ``{haxeNXCompilerProgram} --sp [lineAddress]``
-
------
-
-#### You can also use the following command send the ``.nro`` file to the Nintendo Switch using DevKitPro's ``nxlink`` program:
-
-``{haxeNXCompilerProgram} --send`` or ``{haxeNXCompilerProgram} --s``
-
- - If you want start a server, you can use the following command:
-
-    ``{haxeNXCompilerProgram} --send --server`` or ``{haxeNXCompilerProgram} --s --s``
-
------
-
-#### You can get errors from a log file using the following command:
-
-``{haxeNXCompilerProgram} --crashAnalyzer`` or ``{haxeNXCompilerProgram} --ca``
-
-**THIS IS TOO EXPERIMENTAL!**
-
------
-
-and that's it! if your compilation was successful on both Haxe and Nintendo Switch side, your ``.nro``, ``.ncap`` and ``.elf`` files will be in ``yourOutputFolder/switchFiles``.
-
-
-## libraries JSON file
-
-When you create a library that will be compatible with HaxeNXCompiler and you need it to import important things such as more Haxe libraries, or libraries and parameters for the MakeFile, add a file called ``HxNX_Meta.json`` to your library, which should have the following structure: 
-
-(This is just an example; comments do not work in JSON (at least not in ``haxe.Json``))
-
-```json
-{
-    "libVersion": "0.0.0", // Library version
-    "haxeLibs": [], // more Haxe libraries
-    "switchLibs": [], // C/C++ Libraries for the Nintendo Switch (from DevKitPro)
-    "mainDefines": [], // Defines for Haxe and C/C++
-    "hxDefines": [], // Haxe defines
-    "cDefines": [], // C defines
-    "cppDefines": [] // C++ defines
-}
-```
-
-If HaxeNXCompiler cannot find a library with that file, it will import it only for Haxe.
-
-## About aseets
-
-### About RomFS
-
-The ``romfs`` folder is a folder that contains files that will be added to the ``.nro`` file.
-
-To use this, create a folder in the main folder directory (Who is ``yourOutputFolder``), or a library compatible with HaxeNXCompiler, called "assets" Inside that folder, there should be another folder called "ROMFS" From there, you can copy everything you want, and a folder named "romfs" into a other folder called "SWITCH_ASSETS" will be copied to ``yourOutputFolder``. The MakeFile will then copy those files to the ``.nro`` file, which can be accessed by searching the path "romfs:/" (you must first mount that path with [hx_libnx](https://github.com/Slushi-Github/hx_libnx)!).
-
-### About the metadata for the ``.nro`` file
-
-Inside the JSON file ``haxeNXConfig.json`` you will find the parameters ``appTitle``, ``appVersion``, and ``appAuthor``. You can fill in these fields with whatever information you want to be displayed in the Homebrew menu. 
-
-In addition, if there is a file named "icon.jpg" or one named "YOUR_PROJECT_NAME.jpg" in your project's assets folder or in a folder, they will be copied to the "SWITCH_ASSETS" folder so that the ``.nro`` file can use them. If that ".jpg" file is not found in any library or in the main project, HaxeNXCompiler will automatically provide one in the "SWITCH_ASSETS" folder.
+Want to use assets with this tool? Then go to the guide on [how to use assets](docs/guides/AssetsGuide.md).
 
 ## License
-This project is released under the [MIT license](https://github.com/Slushi-Github/HaxeNXCompiler/blob/main/LICENSE.md).
+
+This project is released under the [MIT License](LICENSE.md).

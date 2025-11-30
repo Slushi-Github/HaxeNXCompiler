@@ -1,0 +1,30 @@
+Usage: HaxeNXCompiler [command] [options]
+
+Commands:
+ --prepare, -p
+  Creates the necessary project XML file template.
+
+ --import, -i [haxe_library_name]
+  Imports a project XML file template from a haxe library.
+
+ --compile, -c
+  Compiles the project from Haxe/C++ to Nintendo Switch.
+   Add "--debug" to the command to enable Haxe debug mode.
+   Add "--clean" to the command to clean the project before compiling.
+   Add "--send" to the command to send the .nro file to the Nintendo Switch after compilation only if compilation is successful (this starts a nxlink server directly on the port \033[3m28771\033[0m), alternative to set the "sendaftercompile" parameter to true in the project XML file.
+
+ --searchProblem, -sp [LineAddress] 
+  Search for a line of code in the [.elf] file from a line address of some log using devkitA64's aarch64-none-elf-addr2line program. 
+
+ --send, -s
+  Sends the .nro file to the Nintendo Switch using DevKitPro's nxlink program.
+   Add "--server" or "-s" to the command to start the nxlink server (on the port \033[3m28771\033[0m), you should define "ENABLE_NXLINK" as C define (with cflag in the project XML file for example).
+
+ --crashAnalyzer, -ca
+  Analyzes the crash log from a .nro file (VERY EXPERIMENTAL).
+
+ --version, -v
+  Shows the version of the compiler.
+
+ --help, -h
+  Shows this message.

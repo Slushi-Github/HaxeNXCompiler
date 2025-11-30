@@ -2,34 +2,29 @@
 //
 // This software is licensed under the MIT License.
 // See the LICENSE file for more details.
-package src.utils;
 
-import haxe.io.Path;
-import sys.FileSystem;
-import sys.io.File;
-import src.JsonFile;
+package source.utilities;
 
-using StringTools;
+import sys.io.Process;
 
 /**
  * Utility to analyze Atmosphere crash reports.
  * 
+ * VERY EXPERIMENTAL
+ * 
  * Author: Slushi.
  */
 class CrashAnalyzer {
-	private static var jsonFile:JsonStruct = JsonFile.getJson();
-
     public static function initWithFile():Void {
-
         var fileResult:String = "";
 
         while (true) {
-            Sys.print("Enter crash report file path: ");
+			Logger.log("Enter crash report file path: ", NONE);
 			fileResult = Sys.stdin().readLine().toString();
             if (!FileSystem.exists(fileResult))
-                SlushiUtils.printMsg("File not found: " + fileResult, SUCCESS);
+                Logger.log("File not found: " + fileResult, SUCCESS);
             else if (fileResult == "" || fileResult == null)
-                SlushiUtils.printMsg("Invalid file path", ERROR);
+                Logger.log("Invalid file path", ERROR);
             else
                 break;
             
@@ -44,7 +39,7 @@ class CrashAnalyzer {
 	 */
 	public static function analyze(input:String):Void {
 		if (input == null || input == "") {
-			SlushiUtils.printMsg("Usage: Provide crash report file or address (0x...)", ERROR);
+			Logger.log("Usage: Provide crash report file or address (0x...)", ERROR);
 			return;
 		}
 
@@ -62,16 +57,16 @@ class CrashAnalyzer {
 		} else if (input.toLowerCase().startsWith("0x")) {
 			analyzeSingleAddr(input, elfPath, addr2line);
 		} else {
-			SlushiUtils.printMsg("Invalid input. Provide file path or hex address", ERROR);
+			Logger.log("Invalid input. Provide file path or hex address", ERROR);
 		}
 	}
 
 	private static function getElfPath():Null<String> {
-		var path = SlushiUtils.getPathFromCurrentTerminal() + "/" + jsonFile.haxeConfig?.cppOutDir + "/switchFiles/" + jsonFile.switchConfig?.projectName
+		var path = CommandLineUtils.getPathFromCurrentTerminal() + "/" + ProjectFile.instance.config.cppOutput + "/switchFiles/" + ProjectFile.instance.config.switchProjectName
 			+ ".elf";
 
 		if (!FileSystem.exists(path)) {
-			SlushiUtils.printMsg("ELF file not found: " + path, ERROR);
+			Logger.log("ELF file not found: " + path, ERROR);
 			return null;
 		}
 		return path;
@@ -80,68 +75,68 @@ class CrashAnalyzer {
 	private static function getAddr2linePath():Null<String> {
 		var devkit = Sys.getEnv("DEVKITPRO");
 		if (devkit == null) {
-			SlushiUtils.printMsg("DEVKITPRO environment variable not set", ERROR);
+			Logger.log("DEVKITPRO environment variable not set", ERROR);
 			return null;
 		}
 
 		var path = devkit + "/devkitA64/bin/aarch64-none-elf-addr2line";
 		if (!FileSystem.exists(path)) {
-			SlushiUtils.printMsg("addr2line not found: " + path, ERROR);
+			Logger.log("addr2line not found: " + path, ERROR);
 			return null;
 		}
 		return path;
 	}
 
 	private static function analyzeSingleAddr(address:String, elfPath:String, addr2line:String):Void {
-		Sys.println("Analyzing: " + address);
-		Sys.println("---");
+		Logger.log("Analyzing: " + address, NONE);
+		Logger.log("---", NONE);
 		Sys.command(addr2line, ["-e", elfPath, "-f", "-C", address]);
-		Sys.println("---");
+		Logger.log("---", NONE);
 	}
 
 	private static function analyzeCrashFile(file:String, elfPath:String, addr2line:String):Void {
-		SlushiUtils.printMsg("Reading crash report...", PROCESSING);
+		Logger.log("Reading crash report...", PROCESSING);
 
 		var content = try File.getContent(file) catch (e:Dynamic) {
-			SlushiUtils.printMsg("Failed to read file: " + e, ERROR);
+			Logger.log("Failed to read file: " + e, ERROR);
 			return;
 		};
 
 		var addresses = extractAddresses(content);
 		if (addresses.length == 0) {
-			SlushiUtils.printMsg("No addresses found in report", ERROR);
+			Logger.log("No addresses found in report", ERROR);
 			return;
 		}
 
-		Sys.println("\nCRASH REPORT:");
-		Sys.println("Found " + addresses.length + " addresses\n");
+		Logger.log("\nCRASH REPORT:", NONE);
+		Logger.log("Found " + addresses.length + " addresses\n", NONE);
 
 		// Analyze main crash location
-		Sys.println("\x1b[38;5;1mPOSIBLE\033[0m CRASH LOCATION:");
+		Logger.log("\x1b[38;5;1mPOSIBLE\033[0m CRASH LOCATION:", NONE);
 		for (i in 0...Std.int(Math.min(5, addresses.length))) {
 			analyzeAddr(addresses[i], i + 1, elfPath, addr2line);
 		}
 
 		// Find user code
-		Sys.println("PROJECT [" + jsonFile.switchConfig?.projectName + "] CODE:");
+		Logger.log("PROJECT [" + ProjectFile.instance.config.switchProjectName + "] CODE:", NONE);
 		var found = findUserCode(addresses, elfPath, addr2line);
 		if (!found) {
-			Sys.println("  x1b[38;5;178m(No project code found in stack trace)\033[0m");
+			Logger.log("  x1b[38;5;178m(No project code found in stack trace)\033[0m", NONE);
 		}
 
-		Sys.println("\n");
+		Logger.log("\n", NONE);
 	}
 
 	private static function analyzeAddr(addr:String, num:Int, elfPath:String, addr2line:String):Void {
-		Sys.println("\n" + num + ". --> " + addr);
+		Logger.log("\n" + num + ". --> " + addr, NONE);
 
-		var proc = new sys.io.Process(addr2line, ["-e", elfPath, "-f", "-C", addr]);
+		var proc = new Process(addr2line, ["-e", elfPath, "-f", "-C", addr]);
 		var output = proc.stdout.readAll().toString();
 		proc.close();
 
 		var lines = output.split("\n");
 		for (line in lines) {
-			line = StringTools.trim(line);
+			line = line.trim();
 			if (line == "" || line == "??")
 				continue;
 
@@ -149,7 +144,7 @@ class CrashAnalyzer {
 			if (line.indexOf("/") != -1) {
 				line = simplifyPath(line);
 			}
-			Sys.println("  " + line);
+			Logger.log("  " + line, NONE);
 		}
 	}
 
@@ -157,7 +152,7 @@ class CrashAnalyzer {
 		var found = false;
 
 		for (addr in addresses) {
-			var proc = new sys.io.Process(addr2line, ["-e", elfPath, "-f", "-C", addr]);
+			var proc = new Process(addr2line, ["-e", elfPath, "-f", "-C", addr]);
 			var output = proc.stdout.readAll().toString();
 			proc.close();
 
@@ -167,12 +162,12 @@ class CrashAnalyzer {
 					found = true;
 
 				var lines = output.split("\n");
-				Sys.println("\n  --> " + addr);
+				Logger.log("\n  --> " + addr, NONE);
 				for (line in lines) {
 					line = StringTools.trim(line);
 					if (line == "" || line == "??")
 						continue;
-					Sys.println("    " + simplifyPath(line));
+					Logger.log("    " + simplifyPath(line), NONE);
 				}
 			}
 		}

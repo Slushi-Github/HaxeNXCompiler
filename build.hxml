@@ -1,10 +1,17 @@
--cp src
--main src.Main
+# Main parameters
+-cp source
+-main source.Main
 -cpp export
 -D HAXE_OUTPUT_PART=HaxeNXCompiler
---resource templates/MakefileNRO@MakefileNRO
---resource templates/WrapperCPP@WrapperCodeCPP
---resource templates/HxNXLogoJPG@HxNXLogoJPG
+# Program embedded resources
+--resource assets/MakefileNRO@MakefileNRO
+--resource assets/WrapperCPP@WrapperCodeCPP
+--resource assets/HxNXLogoJPG@HxNXLogoJPG
+--resource assets/HaxeHXML@HaxeHXML
+--resource assets/CommandsInfo@CommandsInfo
+--resource assets/XML_EXAMPLE@XML_EXAMPLE
+
+# Defines
 -D message.reporting=pretty
 -D HXCPP_STACK_TRACE
 -D HXCPP_CHECK_POINTER
