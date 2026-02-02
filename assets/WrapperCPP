@@ -4,6 +4,7 @@
 #include <switch.h>
 
 #include <cstdio>
+#include <unistd.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +22,14 @@ extern char **_hxcpp_argv;
 
 int main(int argc, char **argv)
 {
+    // We need to initialize the socket even if we're not going to use it with nxlink
+    // Haxe needs to be able to handle their own sockets, if we don't do this it will crash
+    Result result = socketInitializeDefault();
+    if (R_FAILED(result))
+    {
+        printf("[wrapper.cpp -> socketInitializeDefault()] ERROR: Failed to initialize default socket: %08X\n", result);
+    }
+
     _hxcpp_argc = argc;
     _hxcpp_argv = argv;
 
@@ -66,8 +75,11 @@ int main(int argc, char **argv)
             consoleUpdate(NULL);
         }
         consoleExit(NULL);
+        socketExit();
         return -1;
     }
+
+    socketExit();
 
     printf("HaxeNXCompiler v%s -- Project: %s\nProgram Finished!\n\n",
             HAXENXCOMPILER_VERSION,

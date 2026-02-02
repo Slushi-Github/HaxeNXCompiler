@@ -39,3 +39,4 @@ If HaxeNXCompiler cannot find the file, it will only import the library as a nor
 ---------
 
 - [About assets](./AssetsGuide.md)
+- [Other things](./Other.md)

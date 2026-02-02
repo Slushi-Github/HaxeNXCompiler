@@ -13,21 +13,16 @@ This is inspired by an attempt by the [RetroNX Team](https://github.com/retronx-
 
 ---------
 
-**Officially** there are supported libraries to be used in conjunction with HaxeNXCompiler:
+**Officially** there are supported libraries or utilities to be used in conjunction with HaxeNXCompiler:
 
 - [hx_libnx](https://github.com/Slushi-Github/hx_libnx): Haxe/hxcpp ``@:native`` bindings for libnx, the Nintendo Switch's homebrew library.
 
-- SDL2 (And SDL2_Image, SDL2_Mixer): Haxe/hxcpp ``@:native`` bindings for SDL 2.28 libraries (PRIVATE LIBRARY).
+- [Vupx Engine](https://slushi-github.github.io/Vupx-Engine/): A framework engine 2D and 3D built with Haxe, SDL2 and OpenGL 4.3 that can be used to make games for the Nintendo Switch.
 
-- OpenGL 4.3 ES: Haxe/hxcpp ``@:native`` bindings for the OpenGL 4.3 ES, a 3D graphics library (PRIVATE LIBRARY).
+- [Lime-NX](https://github.com/Slushi-Github/lime-nx): Use Lime projects such as OpenFL and even HaxeFlixel on the Nintendo Switch!!! (HaxeNXCompiler comes integrated with Lime-NX, so you don't really need this program to use Lime-NX.) (This is the limit of HaxeNXCompiler).
+    * [Switch Funkin'](https://gamebanana.com/tools/21807): Psych Engine 1.0.4 on the Nintendo Switch, enjoy the real experience of Friday Night Funkin' on your console!
 
-- libVorbis: Haxe/hxcpp ``@:native`` bindings for libvorbis, a decoder for the OGG Vorbis audio format (PRIVATE LIBRARY).
-
-- OpenAL Soft: Haxe/hxcpp ``@:native`` bindings for OpenAL Soft, a 3D audio library (PRIVATE LIBRARY AND NOT FINISHED).
-
-- FontStash: Haxe/hxcpp ``@:native`` bindings for FontStash, a font rendering library compatible with OpenGL and OpenGL ES (PRIVATE LIBRARY AND NOT FINISHED).
-
-The term *"**officially**"* does not mean that only these libraries will work with this tool; they are simply the libraries that I have created specifically for this project and for the Nintendo Switch. However, you can try any libraries you want that are in [Haxelib](https://lib.haxe.org)! (with certain limitations; remember that this is a separate target from the normal ones and is experimental; libraries that depend on C++ libraries will generally not work without changes. And no, don't try to use HaxeFlixel on this target... for now?).
+The term *"**officially**"* does not mean that only these libraries will work with this tool; they are simply the libraries that I have created specifically for this project and for the Nintendo Switch. However, you can try any libraries you want that are in [Haxelib](https://lib.haxe.org)! (with certain limitations; remember that this is a separate target from the normal ones and is experimental; libraries that depend on C++ libraries will generally not work without changes).
 
 ## How is this possible?
 

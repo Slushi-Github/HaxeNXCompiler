@@ -143,4 +143,5 @@ More help information:
 
 - [About assets](./AssetsGuide.md)
 - [About libraries](./LibrariesGuide.md)
+- [Other things](./Other.md)
 - [Program Commands](/assets/CommandsInfo) (This is directly from the file used by the already compiled tool.)

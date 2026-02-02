@@ -12,7 +12,7 @@ class Main {
 	/**
      * The version of the program
 	 */
-	public static final VERSION:String = "3.0.0";
+	public static final VERSION:String = "3.1.0";
 
 	/**
 	 * The name of the program colored with ANSI escape codes
@@ -63,8 +63,8 @@ class Main {
                     MainCompiler.startCompiler(secondArg, thirdArg);
                 case "--send" | "-s":
                     DevKitProUtils.send(secondArg);
-				case "--crashAnalyzer" | "-ca":
-                    CrashAnalyzer.initWithFile();
+                case "searchProblem" | "-sp":
+                    DevKitProUtils.searchProblem(secondArg);
                 case "--help" | "-h":
                     Logger.log(commandsInfo, NONE);
                 case "--version" | "-v":

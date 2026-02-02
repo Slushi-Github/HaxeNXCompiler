@@ -8,17 +8,39 @@ package source.managers;
  * The HxNXLibJSONStruct is used to store the JSON data of a HxNX library.
  */
 typedef HxNXLibJSONStruct = {
+	/**
+	 * Version of the library
+	 */
 	libVersion:String,
-	// Haxe things
+
+	/**
+	 * Haxe libraries
+	 */
 	haxeLibs:Array<String>,
-	// Nintendo Switch things
+
+	/**
+	 * Switch libraries
+	 */
 	switchLibs:Array<String>,
-	// Other things
+
+	/**
+	 * Main defines for Haxe and C/C++
+	 */
 	mainDefines:Array<String>,
-	// Haxe things
+
+	/**
+	 * Haxe defines
+	 */
 	hxDefines:Array<String>,
-	// MakeFile things
+
+	/**
+	 * C defines for the MakeFile
+	 */
 	cDefines:Array<String>,
+
+	/**
+	 * C++ defines for the MakeFile
+	 */
 	cppDefines:Array<String>
 }
 
