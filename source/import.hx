@@ -23,7 +23,6 @@ import source.managers.LibsManager;
 
 import source.utilities.CommandLineUtils;
 import source.utilities.DevKitProUtils;
-import source.utilities.CrashAnalyzer;
 
 import source.ProjectFile;
 import source.Main;
