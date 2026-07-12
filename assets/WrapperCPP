@@ -81,8 +81,8 @@ int main(int argc, char **argv)
 
     socketExit();
 
-    printf("HaxeNXCompiler v%s -- Project: %s\nProgram Finished!\n\n",
-            HAXENXCOMPILER_VERSION,
-            HAXENXCOMPILER_SWITCH_PROJECTNAME);
+    // printf("HaxeNXCompiler v%s -- Project: %s\nProgram Finished!\n\n",
+    //         HAXENXCOMPILER_VERSION,
+    //         HAXENXCOMPILER_SWITCH_PROJECTNAME);
     return 0;
 }
