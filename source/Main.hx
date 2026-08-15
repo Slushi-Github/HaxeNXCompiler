@@ -12,7 +12,7 @@ class Main {
 	/**
      * The version of the program
 	 */
-	public static final VERSION:String = "3.1.0";
+	public static final VERSION:String = "3.1.1";
 
 	/**
 	 * The name of the program colored with ANSI escape codes
@@ -22,7 +22,7 @@ class Main {
     /**
      * The arguments passed to the program
      */
-	static final args:Array<String> = Sys.args();
+	private static final args:Array<String> = Sys.args();
 
     /**
      * embedded list of commands with their description
@@ -63,7 +63,7 @@ class Main {
                     MainCompiler.startCompiler(secondArg, thirdArg);
                 case "--send" | "-s":
                     DevKitProUtils.send(secondArg);
-                case "searchProblem" | "-sp":
+                case "--searchProblem" | "-sp":
                     DevKitProUtils.searchProblem(secondArg);
                 case "--help" | "-h":
                     Logger.log(commandsInfo, NONE);
