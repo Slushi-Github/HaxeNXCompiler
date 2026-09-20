@@ -21,11 +21,16 @@ class MainCompiler {
 
         final principalArg:String = args[0]?.toLowerCase() ?? "";
         final secondArg:String = args[1]?.toLowerCase() ?? "";
+		final thirdArg:String = args[2]?.toLowerCase() ?? "";
 
 		if (principalArg.toLowerCase() == "--debug") {
 			HaxeCompiler.forceDebugMode = true;
 		} else if (principalArg == "--clean") {
 			CommandLineUtils.cleanBuild();
+		}
+
+		if (!HaxeCompiler.forceDebugMode) {
+			HaxeCompiler.forceDebugMode = ProjectFile.instance.config.haxeDebug;
 		}
 
         haxeCompiler = new HaxeCompiler();

@@ -18,6 +18,8 @@ class NXLinker extends BaseCompiler {
 			maxJobs = 2;
 		}
 
+		var haxeMainLib:String = "";
+
 		// make a temporal MakeFile
 		try {
 			var makeFile = InternalAsset.MAKEFILE_NRO;
@@ -48,7 +50,7 @@ class NXLinker extends BaseCompiler {
 				ProjectFile.instance.generateCppDefines() + " " + ProjectFile.instance.generateCppFlagsString() + " " + LibsManager.instance.generateCppDefinesString());
 			makeFile = AssetUtils.replaceTag(makeFile, "LIBS", LibsManager.instance.generateSwitchLibsString());
 
-			var haxeMainLib = ProjectFile.instance.config.cppOutput + "/libHAXE_NX_PROGRAM.a";
+			haxeMainLib = ProjectFile.instance.config.cppOutput + "/libHAXE_NX_PROGRAM.a";
 			if (HaxeCompiler.forceDebugMode) {
 				haxeMainLib = ProjectFile.instance.config.cppOutput + "/libHAXE_NX_PROGRAM-debug.a";
 			}
@@ -80,6 +82,11 @@ class NXLinker extends BaseCompiler {
 		}
 
 		Logger.log("Compiling to ARM64/\x1b[38;5;1mNintendo Switch\033[0m using " + maxJobs + " threads...\n------------------", PROCESSING);
+
+		if (!FileSystem.exists(CommandLineUtils.getPathFromCurrentTerminal() + haxeMainLib)) {
+			Logger.log("\x1b[38;5;1m------------------\033[0m", NONE);
+			Logger.exitBecauseError("\x1b[38;5;214mHaxe\033[0m Can't find [" + haxeMainLib + "], recompile Haxe first");
+		}
 
 		var startTime:Float = Sys.time();
 		var compileProcess = Sys.command("make" + " -j" + maxJobs);
