@@ -21,3 +21,21 @@ if (Nxlink.nxlinkStdio() < 0) {
 ```
 
 And that's it! your logs now will be sent to the nxlink server and you can see them on the terminal.
+
+## Using Haxe Debugger
+
+To use the well-known `hxcpp-debug-server` library, you need to do two things:
+
+1. On your console, go to this file (if it doesn't exist, create it): `sd:/atmosphere/config/system_settings.ini`, where you will put the following:
+
+```ini
+[atmosphere]
+enable_htc = u8!0x0
+enable_standalone_gdbstub = u8!0x1
+```
+
+After doing that, restart your console.
+
+This first step is required; otherwise, **the program will crash as soon as it opens and tries to connect to the debugger**.
+
+2. You need this fork of the VS Code extension: [hxcpp-debugger-remoting](https://github.com/Slushi-Github/hxcpp-debugger-remoting). Instructions on how to use it are explained right there.
