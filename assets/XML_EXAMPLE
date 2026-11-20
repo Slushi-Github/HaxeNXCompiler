@@ -14,7 +14,7 @@
 	<!-- ========================================== -->
 	<!-- Ensure minimum compiler version -->
 	<!-- Operators: =, >, >=, <, <= -->
-	<hxnxcompiler version=">=3.0.0" />
+	<hxnxcompiler version=">=4.0.0" />
 
 	<!-- ========================================== -->
 	<!-- HAXE CONFIGURATION (Required)              -->
@@ -66,6 +66,10 @@
 	<define name="DEBUG"/>
 	<define name="GAME_VERSION" value="1.0.0"/>
 	<define name="USE_PHYSICS"/>
+
+	<!-- Use the legacy HaxeNXCompiler layout: the generated wrapper owns the
+	     socket lifecycle and hx-nx-runtime is not injected automatically. -->
+	<!-- <define name="HAXENXCOMPILER_OLD_METHOD"/> -->
 
 	<!-- ========================================== -->
 	<!-- HAXE LIBRARIES                             -->

@@ -31,6 +31,16 @@ enum abstract InternalAsset(Dynamic) {
 	}
 
 	/**
+	 * Legacy wrapper used with HAXENXCOMPILER_OLD_METHOD. It initializes and
+	 * closes the libnx socket itself, before HxNXRuntime existed.
+	 */
+	public static var WRAPPER_CODE_CPP_OLD(get, never):String;
+
+	private static function get_WRAPPER_CODE_CPP_OLD():String {
+		return Resource.getString("WrapperCodeCPPOld");
+	}
+
+	/**
 	 * The embedded JPG logo of HaxeNXCompiler for the .nro icon
 	 */
 	public static var HXNX_LOGO_JPG(get, never):Bytes;

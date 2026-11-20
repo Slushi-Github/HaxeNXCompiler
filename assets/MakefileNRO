@@ -52,7 +52,7 @@ APP_AUTHOR    := [APP_AUTHOR]
 APP_VERSION   := [APP_VERSION]
 
 HAXE_LIBMAIN := [HAXE_MAIN_LIB]
-HXCPP_PATH := `haxelib path hxcpp | head -n 1`
+HXCPP_PATH := [HXCPP_PATH]
 
 #---------------------------------------------------------------------------------
 # options for code generation

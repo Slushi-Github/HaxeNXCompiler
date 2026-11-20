@@ -29,7 +29,9 @@ class NXLinker extends BaseCompiler {
 			makeFile = AssetUtils.replaceTag(makeFile, "SOURCE_DIR", ProjectFile.instance.config.cppOutput);
 
 			try {
-				var wrapperCode = InternalAsset.WRAPPER_CODE_CPP;
+				var wrapperCode = ProjectFile.instance.usesOldMethod()
+					? InternalAsset.WRAPPER_CODE_CPP_OLD
+					: InternalAsset.WRAPPER_CODE_CPP;
 				wrapperCode = AssetUtils.replaceTag(wrapperCode, "PROGRAM_VERSION", Main.VERSION);
 
 				if (!FileSystem.exists(CommandLineUtils.getPathFromCurrentTerminal() + "/" + ProjectFile.instance.config.cppOutput + "/wrapper_src")) {
@@ -55,6 +57,7 @@ class NXLinker extends BaseCompiler {
 				haxeMainLib = ProjectFile.instance.config.cppOutput + "/libHAXE_NX_PROGRAM-debug.a";
 			}
 			makeFile = AssetUtils.replaceTag(makeFile, "HAXE_MAIN_LIB", haxeMainLib);
+			makeFile = AssetUtils.replaceTag(makeFile, "HXCPP_PATH", LibsManager.instance.requireHxcppPath());
 
 			if (!FileSystem.exists(CommandLineUtils.getPathFromCurrentTerminal() + "/" + ProjectFile.instance.config.cppOutput + "/switchFiles")) {
 				FileSystem.createDirectory(CommandLineUtils.getPathFromCurrentTerminal() + "/" + ProjectFile.instance.config.cppOutput + "/switchFiles");

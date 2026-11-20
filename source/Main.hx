@@ -12,7 +12,7 @@ class Main {
 	/**
      * The version of the program
 	 */
-	public static final VERSION:String = "3.1.2";
+	public static final VERSION:String = "4.0.0";
 
 	/**
 	 * The name of the program colored with ANSI escape codes

@@ -6,6 +6,7 @@
 	# Default and required libraries #########
 	-lib hxcpp
 	-lib hx_libnx
+	[DEFAULT_NX_RUNTIME_LIB]
 	# HXCPP parameters #########
 	-cpp [CPP_OUTPUT_PATH]
 	-D HAXE_OUTPUT_PART=HAXE_NX_PROGRAM

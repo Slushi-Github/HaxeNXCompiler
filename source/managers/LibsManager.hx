@@ -4,6 +4,8 @@
 // See the LICENSE file for more details.
 package source.managers;
 
+import sys.io.Process;
+
 /**
  * The HxNXLibJSONStruct is used to store the JSON data of a HxNX library.
  */
@@ -77,6 +79,11 @@ class LibsManager {
 
 	public var libs:Array<HxNXLibStruct> = [];
 
+	/**
+	 * Path to the installed hxcpp library, resolved during validation.
+	 */
+	public var hxcppPath(default, null):Null<String> = null;
+
 	private var importedLibs:Map<String, Bool> = new Map();
 	private var haxelibPath:String = "";
 	private var mainPath:String = "";
@@ -95,6 +102,8 @@ class LibsManager {
 			mainPath = haxelibPath;
 		}
 
+		validateRequiredLibraries();
+
 		var requiredMainLibs:Array<HaxeLib> = ProjectFile.instance.getActiveHaxeLibs();
 
 		if (requiredMainLibs.length == 0) {
@@ -107,8 +116,9 @@ class LibsManager {
 		// First, add the main project libraries
 		for (lib in requiredMainLibs) {
 
-			if (lib.name == "hx_libnx") {
-				Logger.log("The \"hx_libnx\" library is already imported by default, skipping.", INFO);
+			if (lib.name == "hx_libnx"
+				|| (lib.name == "hx-nx-runtime" && !ProjectFile.instance.usesOldMethod())) {
+				Logger.log('The "${lib.name}" library is already imported by default, skipping.', INFO);
 				continue;
 			}
 
@@ -125,6 +135,99 @@ class LibsManager {
 
 		// Logger.log('Found ${libs.length} library(ies) with HxNX metadata.', SUCCESS);
 		// Logger.log('Total Haxe libraries (including dependencies): ${Lambda.count(allHaxeLibs)}', INFO);
+	}
+
+	/**
+	 * Fails before Haxe starts when a library required by the build is not
+	 * installed in the current Haxelib repository.
+	 */
+	private function validateRequiredLibraries():Void {
+		var missing:Array<String> = [];
+
+		if (!isHaxeLibraryInstalled("hx_libnx"))
+			missing.push("hx_libnx");
+
+		// The modern layout injects hx-nx-runtime automatically. The legacy
+		// layout only needs it when the project declares it.
+		var needsNxRuntime = !ProjectFile.instance.usesOldMethod()
+			|| Lambda.exists(ProjectFile.instance.getActiveHaxeLibs(), lib -> lib.name == "hx-nx-runtime");
+
+		if (needsNxRuntime && !isHaxeLibraryInstalled("hx-nx-runtime"))
+			missing.push("hx-nx-runtime");
+
+		if (missing.length == 0) {
+			hxcppPath = getHaxeLibraryPath("hxcpp");
+			requireHxcppPath();
+			return;
+		}
+
+		var message = 'Missing required Haxe librar${missing.length == 1 ? "y" : "ies"}: ${missing.join(", ")}\n\n';
+
+		if (missing.contains("hx_libnx")) {
+			message += "hx_libnx:\n"
+				+ "  haxelib git hx_libnx https://github.com/Slushi-Github/hx_libnx\n";
+		}
+
+		if (missing.contains("hx-nx-runtime")) {
+			message += "hx-nx-runtime (HxNXRuntime):\n"
+				+ "  haxelib git hx-nx-runtime https://github.com/Slushi-Github/HxNXRuntime\n";
+		}
+
+		message += '\nOr link a local checkout with "haxelib dev <name> /path/to/<name>".';
+
+		if (!ProjectFile.instance.usesOldMethod() && missing.contains("hx-nx-runtime")) {
+			message += "\n\nIf you do not want to use HxNXRuntime, enable the legacy layout with"
+				+ "\n<define name=\"HAXENXCOMPILER_OLD_METHOD\"/> in HxNXProject.xml.";
+		}
+
+		Logger.exitBecauseError(message);
+	}
+
+	/**
+	 * Returns the hxcpp path, or stops the build when it is not a real path.
+	 * The generated Makefile embeds this value directly, so an invalid path
+	 * must never reach it.
+	 */
+	public function requireHxcppPath():String {
+		if (hxcppPath != null && FileSystem.isDirectory(hxcppPath))
+			return hxcppPath;
+
+		Logger.exitBecauseError('Could not resolve a valid hxcpp path with "haxelib libpath hxcpp".\n'
+			+ 'Returned: ' + (hxcppPath == null ? "(nothing)" : hxcppPath) + '\n'
+			+ 'Make sure hxcpp is installed. If you use libhxcpp, run:\n'
+			+ '  haxelib install libhxcpp\n'
+			+ '  haxelib run libhxcpp setup');
+		return "";
+	}
+
+	/**
+	 * Resolves the installation path of a Haxe library with haxelib.
+	 * Returns null when haxelib cannot find it or prints nothing usable.
+	 */
+	public function getHaxeLibraryPath(libName:String):Null<String> {
+		try {
+			var process = new Process("haxelib", ["libpath", libName]);
+			var output = process.stdout.readAll().toString().trim();
+			process.stderr.readAll();
+			var exitCode = process.exitCode();
+			process.close();
+
+			if (exitCode != 0 || output == "")
+				return null;
+
+			return output;
+		} catch (e:Dynamic) {
+			var fallback = mainPath + "/" + libName;
+			return FileSystem.exists(fallback) ? fallback : null;
+		}
+	}
+
+	/**
+	 * Checks whether haxelib can resolve a library from the current project.
+	 */
+	private function isHaxeLibraryInstalled(libName:String):Bool {
+		var path = getHaxeLibraryPath(libName);
+		return path != null && FileSystem.isDirectory(path);
 	}
 
 	/**

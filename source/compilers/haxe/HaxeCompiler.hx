@@ -45,6 +45,8 @@ class HaxeCompiler extends BaseCompiler {
 			hxml = AssetUtils.replaceTag(hxml, "HAXE_SOURCE_PATH", ProjectFile.instance.config.sourcePath);
 			hxml = AssetUtils.replaceTag(hxml, "HAXE_MAIN_CLASS_NAME", ProjectFile.instance.config.haxeMain);
 			hxml = AssetUtils.replaceTag(hxml, "HAXE_REPORTING_STYLE", reportStyle);
+			var defaultNxRuntimeLib = ProjectFile.instance.usesOldMethod() ? "" : "-lib hx-nx-runtime";
+			hxml = AssetUtils.replaceTag(hxml, "DEFAULT_NX_RUNTIME_LIB", defaultNxRuntimeLib);
 			hxml = AssetUtils.replaceTag(hxml, "CPP_OUTPUT_PATH", ProjectFile.instance.config.cppOutput);
 			hxml = AssetUtils.replaceTag(hxml, "SWITCH_PROJECT_NAME", ProjectFile.instance.config.switchProjectName);
 			hxml = AssetUtils.replaceTag(hxml, "HAXE_LIBS", LibsManager.instance.generateAllHaxeLibsString());

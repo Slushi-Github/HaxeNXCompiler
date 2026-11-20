@@ -526,6 +526,18 @@ class ProjectFile {
 	}
 
 	/**
+	 * Whether the project asks for the legacy HaxeNXCompiler layout.
+	 *
+	 * Enable it with <define name="HAXENXCOMPILER_OLD_METHOD"/> in
+	 * HxNXProject.xml. In that mode the generated wrapper owns the socket
+	 * lifecycle and hx-nx-runtime is not injected automatically, so the
+	 * project declares it like any other library.
+	 */
+	public function usesOldMethod():Bool {
+		return config.activeDefines.exists("HAXENXCOMPILER_OLD_METHOD");
+	}
+
+	/**
 	 * Gets the haxelibs that should be used (filtering by conditions)
 	 */
 	public function getActiveHaxeLibs():Array<HaxeLib> {

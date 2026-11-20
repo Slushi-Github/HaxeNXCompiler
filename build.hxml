@@ -6,6 +6,7 @@
 # Program embedded resources
 --resource assets/MakefileNRO@MakefileNRO
 --resource assets/WrapperCPP@WrapperCodeCPP
+--resource assets/WrapperCPP_OLD@WrapperCodeCPPOld
 --resource assets/HxNXLogoJPG@HxNXLogoJPG
 --resource assets/HaxeHXML@HaxeHXML
 --resource assets/CommandsInfo@CommandsInfo

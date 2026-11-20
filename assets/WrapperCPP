@@ -22,24 +22,14 @@ extern char **_hxcpp_argv;
 
 int main(int argc, char **argv)
 {
-    // We need to initialize the socket even if we're not going to use it with nxlink
-    // Haxe needs to be able to handle their own sockets, if we don't do this it will crash
-    Result result = socketInitializeDefault();
-    if (R_FAILED(result))
-    {
-        printf("[wrapper.cpp -> socketInitializeDefault()] ERROR: Failed to initialize default socket: %08X\n", result);
-    }
+    // Socket initialization/teardown is handled by the linked hxcpp runtime,
+    // which starts the default socket before main() and closes it on exit.
 
     _hxcpp_argc = argc;
     _hxcpp_argv = argv;
 
     try
     {
-        // HX_TOP_OF_STACK
-        // hx::Boot();
-        // __boot_all();
-        // __hxcpp_main();
-
         __hxcpp_lib_main();
     }
     catch (Dynamic e)
@@ -75,14 +65,8 @@ int main(int argc, char **argv)
             consoleUpdate(NULL);
         }
         consoleExit(NULL);
-        socketExit();
         return -1;
     }
 
-    socketExit();
-
-    // printf("HaxeNXCompiler v%s -- Project: %s\nProgram Finished!\n\n",
-    //         HAXENXCOMPILER_VERSION,
-    //         HAXENXCOMPILER_SWITCH_PROJECTNAME);
     return 0;
 }

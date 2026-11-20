@@ -1,7 +1,7 @@
 # Getting Started
 
 ### Small recommendation:
-It is advisable to test on real hardware. I do not recommend using emulators, not only because they sometimes fail to show certain errors that occur on a real console, but also because they can crash for no reason, whereas a real console does not. If you are going to use an emulator, I recommend Yuzu, as it gives the best results, but the emulator will crash if there are errors. so really, use a real console. The Nintendo Switch is quick to restart if the crash occurred in applet mode. If you do it from a game that has already started, only Nintendo's crash handler should appear. 
+It is advisable to test on real hardware. I do not recommend using emulators, not only because they sometimes fail to show certain errors that occur on a real console, but also because they can crash for no reason, whereas a real console does not. If you are going to use an emulator, I recommend Eden, as it gives the best results?, but the emulator can crash if there are errors. so really, use a real console. The Nintendo Switch is quick to restart if the crash occurred in applet mode. If you do it from a game that has already started, only Nintendo's crash handler should appear. 
 
 ---------
 
@@ -39,16 +39,38 @@ Why create a new local Haxelib repository? Because we are going to use modified 
 
 ---------
 
-Now you need two libraries that are mandatory for a project using this tool:
+Now you need the libraries that are mandatory for a project using this tool:
 
 ```bash
-# Get the modified version of hxcpp-nx, the hxcpp for the Nintendo Switch
-haxelib git hxcpp https://github.com/Slushi-Github/hxcpp-nx
+# libhxcpp, the maintained hxcpp runtime (do not use stock hxcpp)
+haxelib git libhxcpp https://github.com/openfl/libhxcpp
+
+# Make "-lib hxcpp" resolve to libhxcpp
+haxelib run libhxcpp setup
 ```
 
 ```bash
 # Get the libnx bindings for Haxe, The homebrew SDK for the Nintendo Switch
 haxelib git hx_libnx https://github.com/Slushi-Github/hx_libnx
+```
+
+```bash
+# HxNXRuntime: Switch runtime support for libhxcpp.
+# HaxeNXCompiler adds "-lib hx-nx-runtime" automatically, but the library
+# still needs to be installed. For a local checkout use haxelib dev instead.
+haxelib git hx-nx-runtime https://github.com/Slushi-Github/HxNXRuntime
+```
+
+HxNXRuntime stays separate from libhxcpp: it injects the NX toolchain and
+runtime sources without modifying libhxcpp. You do not need to declare it in
+`HxNXProject.xml`; doing so is also fine (it is not duplicated).
+
+If you need the previous way to compile, where the generated wrapper owns the socket
+lifecycle and you use a fork of hxcpp which it handles the rest of the implementations, add this to the project XML
+instead of recompiling the tool:
+
+```xml
+<define name="HAXENXCOMPILER_OLD_METHOD"/>
 ```
 
 ---------
@@ -84,7 +106,7 @@ class Main
         // Initialize the console for printing to the screen
 		Console.consoleInit(null);
 
-        // Print "Hello, World!" using Haxe functions (I believe that ``trace("")`` does not work for this)
+        // Print "Hello, World!" using Haxe functions
         Sys.println("Hello, World!");
 
         // Set up the pad, this is the controller
